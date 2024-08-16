@@ -8,7 +8,7 @@ function Menu() {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <div>
+    <div className="">
       <Image
         src="/menu.png"
         width={28}
