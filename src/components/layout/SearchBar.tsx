@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
+import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 
 function SearchBar() {
   const router = useRouter();
@@ -16,19 +17,19 @@ function SearchBar() {
       router.push(`/list?name=${searchQuery}`);
   }
 
+  let s =
+    "flex flex-1 items-center justify-between gap-4 rounded-md bg-primary-foreground";
+
   return (
-    <form
-      onSubmit={handleSearch}
-      className="bg-g flex flex-1 items-center justify-between gap-4 rounded-md bg-gray-100 p-2"
-    >
+    <form onSubmit={handleSearch} className="group relative">
       <input
         type="text"
         name="searchQuery"
         placeholder="Search"
-        className="flex-1 bg-transparent outline-none"
+        className="rounded-md bg-card px-2 py-1 ps-2 outline-none ring-1 ring-border focus:border-none focus:ring-primary group-hover:ring-foreground"
       />
-      <button className="cursor-pointer">
-        <Image src="/search.png" width={16} height={16} alt="search icon" />
+      <button className="absolute inset-y-0 right-2 cursor-pointer text-border group-hover:text-foreground">
+        <HiOutlineMagnifyingGlass style={{ width: 23, height: 23 }} />
       </button>
     </form>
   );

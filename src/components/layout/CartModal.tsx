@@ -4,7 +4,7 @@ function CartModal() {
   const cartItems = false;
 
   return (
-    <div className="absolute right-0 top-12 z-20 flex w-max flex-col gap-6 rounded-md bg-white p-4 shadow-modal">
+    <div className="bg-card absolute right-0 top-12 z-20 flex w-max flex-col gap-6 rounded-md p-4 shadow-modal">
       {cartItems ? (
         <div>Cart is Empty</div>
       ) : (
@@ -16,7 +16,7 @@ function CartModal() {
               <span>Subtotal</span>
               <span>$49</span>
             </div>
-            <p className="mb-4 mt-2 text-sm text-gray-500">
+            <p className="text-muted-foreground mb-4 mt-2 text-sm">
               Lorem ipsum dolor sit amet, consectetur adipisicing.
             </p>
             <div className="flex justify-between text-sm">

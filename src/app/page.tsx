@@ -2,7 +2,7 @@ import Slider from "@/components/Slider";
 
 function HomePage() {
   return (
-    <div>
+    <div className="bg-background">
       <Slider />
     </div>
   );
