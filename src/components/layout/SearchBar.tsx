@@ -26,7 +26,7 @@ function SearchBar() {
         type="text"
         name="searchQuery"
         placeholder="Search"
-        className="rounded-md bg-card px-2 py-1 ps-2 outline-none ring-1 ring-border focus:border-none focus:ring-primary group-hover:ring-foreground"
+        className="rounded-md bg-card px-2 py-1 ps-2 outline-none ring-1 ring-border focus:ring-foreground group-hover:ring-foreground"
       />
       <button className="absolute inset-y-0 right-2 cursor-pointer text-border group-hover:text-foreground">
         <HiOutlineMagnifyingGlass style={{ width: 23, height: 23 }} />

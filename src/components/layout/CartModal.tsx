@@ -4,7 +4,7 @@ function CartModal() {
   const cartItems = false;
 
   return (
-    <div className="bg-card absolute right-0 top-12 z-20 flex w-max flex-col gap-6 rounded-md p-4 shadow-modal">
+    <div className="absolute right-0 top-12 z-20 flex w-max flex-col gap-6 rounded-md bg-card p-4 shadow-modal">
       {cartItems ? (
         <div>Cart is Empty</div>
       ) : (
@@ -16,7 +16,7 @@ function CartModal() {
               <span>Subtotal</span>
               <span>$49</span>
             </div>
-            <p className="text-muted-foreground mb-4 mt-2 text-sm">
+            <p className="mb-4 mt-2 text-sm text-muted-foreground">
               Lorem ipsum dolor sit amet, consectetur adipisicing.
             </p>
             <div className="flex justify-between text-sm">
@@ -52,7 +52,7 @@ function ProductCartItem() {
           {/* title */}
           <div className="flex items-center justify-between gap-8">
             <h3 className="font-semibold">Product Name:</h3>
-            <span className="rounded-sm bg-gray-50 p-1">$49</span>
+            <span className="rounded-sm bg-muted px-2">$49</span>
           </div>
           {/* desc */}
           <div className="text-sm text-gray-500"></div>
@@ -61,7 +61,7 @@ function ProductCartItem() {
         {/* bottom */}
         <div className="flex justify-between text-sm">
           <span className="text-gray-500">Qty. 2</span>
-          <span className="text-blue-500">Remove</span>
+          <button className="text-blue-500 hover:text-primary">Remove</button>
         </div>
       </div>
     </div>
