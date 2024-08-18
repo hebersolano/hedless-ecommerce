@@ -13,6 +13,7 @@ import {
 import CartModal from "./CartModal";
 import ThemeToggle from "../ThemeToggle";
 import Modal from "../Modal";
+import MenuBox from "../MenuWindows";
 
 const iconStyle = { height: 23, width: 23 };
 
@@ -47,8 +48,8 @@ function NavbarIcons() {
       <button className="hover:text-primary">
         <HiOutlineBell style={iconStyle} />
       </button>
-      <Modal>
-        <Modal.Open opens="cart-menu">
+      <MenuBox>
+        <MenuBox.Trigger opens="cart-menu">
           <div className="relative cursor-pointer">
             <HiOutlineShoppingCart
               style={iconStyle}
@@ -59,11 +60,11 @@ function NavbarIcons() {
               <span className="">3</span>
             </div>
           </div>
-        </Modal.Open>
-        <Modal.Window name="cart-menu">
+        </MenuBox.Trigger>
+        <MenuBox.Content name="cart-menu">
           <CartModal />
-        </Modal.Window>
-      </Modal>
+        </MenuBox.Content>
+      </MenuBox>
     </div>
   );
 }
