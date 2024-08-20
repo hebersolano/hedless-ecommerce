@@ -31,39 +31,43 @@ function NavbarIcons() {
 
   return (
     <div className="group relative flex flex-none items-center gap-2 xl:gap-4">
-      <ThemeToggle iconStyle={iconStyle} />
-
-      {/* profile */}
-      <button className="hover:text-primary" onClick={handleProfile}>
-        <HiOutlineUserCircle style={iconStyle} />
-      </button>
-      {isProfileOpen && (
-        <div className="absolute left-0 top-12 z-20 rounded-md bg-background p-4 text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-          <Link href="/">Profile</Link>
-          <div className="mt-2 cursor-pointer">Logout</div>
-        </div>
-      )}
-
-      {/* notifications */}
-      <button className="hover:text-primary">
-        <HiOutlineBell style={iconStyle} />
-      </button>
       <MenuBox>
-        <MenuBox.Trigger opens="cart-menu">
-          <div className="relative cursor-pointer">
-            <HiOutlineShoppingCart
-              style={iconStyle}
-              className="hover:text-primary"
-            />
-
-            <div className="pointer-events-none absolute -top-4 left-3 flex h-6 w-6 items-center justify-center rounded-full bg-lama text-sm leading-none">
-              <span className="">3</span>
+        <>
+          <ThemeToggle iconStyle={iconStyle} />
+          {/* profile */}
+          <MenuBox.Trigger opens="profile-menu">
+            <button className="hover:text-primary" onClick={handleProfile}>
+              <HiOutlineUserCircle style={iconStyle} />
+            </button>
+          </MenuBox.Trigger>
+          <MenuBox.Content name="profile-menu">
+            <div className="absolute left-0 top-12 z-20 rounded-md bg-background p-4 text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+              <Link href="/">Profile</Link>
+              <div className="mt-2 cursor-pointer">Logout</div>
             </div>
-          </div>
-        </MenuBox.Trigger>
-        <MenuBox.Content name="cart-menu">
-          <CartModal />
-        </MenuBox.Content>
+          </MenuBox.Content>
+
+          {/* notifications */}
+          <button className="hover:text-primary">
+            <HiOutlineBell style={iconStyle} />
+          </button>
+
+          <MenuBox.Trigger opens="cart-menu">
+            <div className="relative cursor-pointer">
+              <HiOutlineShoppingCart
+                style={iconStyle}
+                className="hover:text-primary"
+              />
+
+              <div className="pointer-events-none absolute -top-4 left-3 flex h-6 w-6 items-center justify-center rounded-full bg-lama text-sm leading-none">
+                <span className="">3</span>
+              </div>
+            </div>
+          </MenuBox.Trigger>
+          <MenuBox.Content name="cart-menu">
+            <CartModal />
+          </MenuBox.Content>
+        </>
       </MenuBox>
     </div>
   );

@@ -45,8 +45,13 @@ function Trigger({
     MenuContext,
   ) as MenuContextT;
 
+  function handleCartClick() {
+    console.log(openMenuName);
+    setOpenMenuName((prev) => (prev === opens ? "" : opens));
+  }
+
   return cloneElement(children, {
-    onClick: () => setOpenMenuName(opens),
+    onClick: handleCartClick,
     id: opens,
   });
 }
@@ -57,18 +62,15 @@ function Content({ children, name }: { children: ReactElement; name: string }) {
 
   useEffect(
     function () {
-      const trigger = document.getElementById(openMenuName);
       function handleClickOutside(event: Event) {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
-          onCloseMenu && onCloseMenu();
+        const trigger = document.getElementById(openMenuName);
+        const target = event.target as Node;
+
+        if (!ref.current?.contains(target) && !trigger?.contains(target)) {
+          onCloseMenu?.();
         }
       }
       document.addEventListener("click", handleClickOutside, true);
-      if (trigger) {
-        console.log("trigger button");
-        trigger.onclick = () => console.log("new event");
-        console.dir(trigger);
-      }
 
       return () => {
         document.removeEventListener("click", handleClickOutside, true);
