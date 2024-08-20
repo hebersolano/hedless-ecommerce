@@ -6,7 +6,7 @@ import SearchBar from "./SearchBar";
 
 function Navbar() {
   return (
-    <div className="relative h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
+    <div className="relative h-16 bg-background px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       {/* mobile */}
       <div className="flex h-full items-center justify-between md:hidden">
         <Link href="/">
@@ -23,12 +23,23 @@ function Navbar() {
             <Image src="/logo.png" alt="logo" width={24} height={24} />
             <div className="text-2xl tracking-wide">ANA&apos;s</div>
           </Link>
+
           <div className="hidden gap-4 lg:flex">
-            <Link href="/">Homepage</Link>
-            <Link href="/">Shop</Link>
-            <Link href="/">Deals</Link>
-            <Link href="/">About</Link>
-            <Link href="/">Contact</Link>
+            <Link href="/" className="hover:text-primary">
+              Homepage
+            </Link>
+            <Link href="/shop" className="hover:text-primary">
+              Shop
+            </Link>
+            <Link href="/deals" className="hover:text-primary">
+              Deals
+            </Link>
+            <Link href="/about" className="hover:text-primary">
+              About
+            </Link>
+            <Link href="/contact" className="hover:text-primary">
+              Contact
+            </Link>
           </div>
         </div>
         {/* right */}

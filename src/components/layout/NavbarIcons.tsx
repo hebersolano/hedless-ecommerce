@@ -4,8 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+  HiOutlineUserCircle,
+  HiOutlineBell,
+  HiOutlineShoppingCart,
+} from "react-icons/hi2";
 
 import CartModal from "./CartModal";
+import ThemeToggle from "../ThemeToggle";
+import Modal from "../Modal";
+import MenuBox from "../MenuWindows";
+
+const iconStyle = { height: 23, width: 23 };
 
 function NavbarIcons() {
   const router = useRouter();
@@ -20,42 +30,45 @@ function NavbarIcons() {
   }
 
   return (
-    <div className="relative flex flex-none items-center gap-4 xl:gap-6">
-      <Image
-        src="/profile.png"
-        alt="profile icon"
-        width={22}
-        height={22}
-        className="cursor-pointer"
-        onClick={handleProfile}
-      />
-      {isProfileOpen && (
-        <div className="absolute left-0 top-12 z-20 rounded-md p-4 text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-          <Link href="/">Profile</Link>
-          <div className="mt-2 cursor-pointer">Logout</div>
-        </div>
-      )}
-      <Image
-        src="/notification.png"
-        alt="notification icon"
-        width={22}
-        height={22}
-        className="cursor-pointer"
-      />
-      <div className="relative cursor-pointer">
-        <Image
-          src="/cart.png"
-          alt="cart icon"
-          width={22}
-          height={22}
-          className="cursor-pointer"
-          onClick={() => setIsCartOpen((prev) => !prev)}
-        />
-        <div className="bg-lama pointer-events-none absolute -right-2 -top-4 flex h-6 w-6 items-center justify-center rounded-full text-sm leading-none text-white">
-          3
-        </div>
-      </div>
-      {isCartOpen && <CartModal />}
+    <div className="group relative flex flex-none items-center">
+      <ThemeToggle iconStyle={iconStyle} />
+      <MenuBox>
+        <>
+          {/* profile */}
+          <MenuBox.Trigger opens="profile-menu">
+            <button className="ml-3 hover:text-primary" onClick={handleProfile}>
+              <HiOutlineUserCircle style={iconStyle} />
+            </button>
+          </MenuBox.Trigger>
+          <MenuBox.Content name="profile-menu">
+            <div className="absolute left-0 top-12 z-20 rounded-md bg-background p-4 text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+              <Link href="/">Profile</Link>
+              <div className="mt-2 cursor-pointer">Logout</div>
+            </div>
+          </MenuBox.Content>
+
+          {/* notifications */}
+          <button className="ml-3 hover:text-primary">
+            <HiOutlineBell style={iconStyle} />
+          </button>
+
+          <MenuBox.Trigger opens="cart-menu">
+            <div className="relative ml-3 cursor-pointer">
+              <HiOutlineShoppingCart
+                style={iconStyle}
+                className="hover:text-primary"
+              />
+
+              <div className="pointer-events-none absolute -top-4 left-3 flex h-6 w-6 items-center justify-center rounded-full bg-lama text-sm leading-none">
+                <span className="">3</span>
+              </div>
+            </div>
+          </MenuBox.Trigger>
+          <MenuBox.Content name="cart-menu">
+            <CartModal />
+          </MenuBox.Content>
+        </>
+      </MenuBox>
     </div>
   );
 }
