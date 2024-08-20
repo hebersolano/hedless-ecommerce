@@ -45,13 +45,8 @@ function Trigger({
     MenuContext,
   ) as MenuContextT;
 
-  function handleCartClick() {
-    console.log(openMenuName);
-    setOpenMenuName((prev) => (prev === opens ? "" : opens));
-  }
-
   return cloneElement(children, {
-    onClick: handleCartClick,
+    onClick: () => setOpenMenuName((prev) => (prev === opens ? "" : opens)),
     id: opens,
   });
 }

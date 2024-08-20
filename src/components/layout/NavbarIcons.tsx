@@ -30,13 +30,13 @@ function NavbarIcons() {
   }
 
   return (
-    <div className="group relative flex flex-none items-center gap-2 xl:gap-4">
+    <div className="group relative flex flex-none items-center">
+      <ThemeToggle iconStyle={iconStyle} />
       <MenuBox>
         <>
-          <ThemeToggle iconStyle={iconStyle} />
           {/* profile */}
           <MenuBox.Trigger opens="profile-menu">
-            <button className="hover:text-primary" onClick={handleProfile}>
+            <button className="ml-3 hover:text-primary" onClick={handleProfile}>
               <HiOutlineUserCircle style={iconStyle} />
             </button>
           </MenuBox.Trigger>
@@ -48,12 +48,12 @@ function NavbarIcons() {
           </MenuBox.Content>
 
           {/* notifications */}
-          <button className="hover:text-primary">
+          <button className="ml-3 hover:text-primary">
             <HiOutlineBell style={iconStyle} />
           </button>
 
           <MenuBox.Trigger opens="cart-menu">
-            <div className="relative cursor-pointer">
+            <div className="relative ml-3 cursor-pointer">
               <HiOutlineShoppingCart
                 style={iconStyle}
                 className="hover:text-primary"

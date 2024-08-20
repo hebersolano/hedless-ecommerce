@@ -7,6 +7,10 @@
 }
 
 :root {
+  --pallet-01: #fefce8;
+  --pallet-02: #fff1f2;
+  --pallet-02: #eff6ff;
+
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
@@ -32,6 +36,10 @@
 }
 
 .dark {
+  --pallet-01: #422006;
+  --pallet-02: #500724;
+  --pallet-03: #172554;
+
   --background: 20 14.3% 4.1%;
   --foreground: 0 0% 95%;
   --card: 24 9.8% 10%;

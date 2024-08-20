@@ -19,6 +19,11 @@ const config: Config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        pallet: {
+          DEFAULT: "var(--pallet-01)",
+          second: "var(--pallet-02)",
+          third: "var(--pallet-03)",
+        },
         background: {
           DEFAULT: "hsl(var(--background))",
           second: "hsl(var(--bg-second))",
