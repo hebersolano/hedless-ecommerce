@@ -43,7 +43,7 @@ function Slider() {
   // }, []);
 
   return (
-    <div className="h-[calc(100vh-80px)] overflow-hidden">
+    <section className="h-[calc(100vh-80px)] overflow-hidden">
       <div
         className="flex h-full w-max transition-all duration-1000 ease-in-out"
         style={{ transform: `translateX(-${current * 100}vw)` }}
@@ -95,7 +95,7 @@ function Slider() {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 

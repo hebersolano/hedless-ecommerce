@@ -60,3 +60,10 @@
   --input: 240 3.7% 15.9%;
   --ring: 348 86% 66%;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  scrollbar-width: none;
+}
