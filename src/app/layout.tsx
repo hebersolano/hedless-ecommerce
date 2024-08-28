@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "next-themes";
+import { WixClientProvider } from "@/context/WixContext";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -21,9 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" enableSystem={false}>
-          <Navbar />
-          {children}
-          <Footer />
+          <WixClientProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </WixClientProvider>
         </ThemeProvider>
       </body>
     </html>

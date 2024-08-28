@@ -1,9 +1,27 @@
+"use client";
+
 import CategoryList from "@/components/CategoryList";
 import NewProductList from "@/components/NewProductList";
 import ProductList from "@/components/ProductList";
 import Slider from "@/components/Slider";
+import { wixClientContext } from "@/context/WixContext";
+import { useContext, useEffect } from "react";
 
 function HomePage() {
+  const wixClient = useContext(wixClientContext);
+
+  useEffect(
+    function () {
+      async function getProducts() {
+        const res = await wixClient.products.queryProducts().find();
+        console.log(res);
+      }
+
+      getProducts();
+    },
+    [wixClient],
+  );
+
   return (
     <div className="bg-background">
       <Slider />
