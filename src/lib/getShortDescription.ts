@@ -7,6 +7,7 @@ export default function getShortDescription(product: products.Product) {
     product.additionalInfoSections?.find(
       (section) => section.title === "short-description",
     )?.description || truncateString(product.description!, 65);
+    
   return sanitizeHtml(ShortDescription, {
     allowedTags: [],
     allowedAttributes: {},

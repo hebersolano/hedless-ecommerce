@@ -1,21 +1,22 @@
-import { equal } from "assert";
 import wixClientServer from "../wixClientServer";
 
 export default async function getProductsByCategory({
   categoryId,
-  limit = 20,
+  limit = 0,
 }: {
   categoryId: string;
   limit?: number;
 }) {
   if (!categoryId) throw Error("categoryId is required");
 
+  let query;
+
   const wixClient = wixClientServer();
-  const products = await wixClient.products
-    .queryProducts()
-    .eq("collectionIds", categoryId)
-    .limit(limit)
-    .find();
+  query = wixClient.products.queryProducts().eq("collectionIds", categoryId);
+
+  if (limit) query.limit(limit);
+
+  const products = await query.find();
 
   return products;
 }

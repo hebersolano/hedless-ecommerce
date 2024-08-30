@@ -1,16 +1,17 @@
 import getProductsByCategory from "@/lib/data-access/getProductsByCategory";
 import getShortDescription from "@/lib/getShortDescription";
-import truncateString from "@/lib/helpers/truncateString";
-import { products } from "@wix/stores";
+import { type products } from "@wix/stores";
 import Image from "next/image";
 import Link from "next/link";
 
 async function ProductList({
   categoryId,
   limit,
+  filter,
 }: {
   categoryId: string;
   limit?: number;
+  filter?: { [key: string]: string | undefined };
 }) {
   const products = await getProductsByCategory({ categoryId, limit });
 

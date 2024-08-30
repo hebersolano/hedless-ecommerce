@@ -1,8 +1,20 @@
 import Filter from "@/components/Filter";
 import ProductList from "@/components/ProductList";
+import Skeleton from "@/components/Skeleton";
+import getCategoryBySlug from "@/lib/data-access/getCategoryBySlug";
 import Image from "next/image";
+import { Suspense } from "react";
 
-function ListPage() {
+async function ListPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) {
+  const cat = searchParams.cat || "all-products";
+  const category = await getCategoryBySlug(cat);
+  const categoryId =
+    category.collection?._id || process.env.ALL_PRODUCTS_CATEGORY_ID!;
+
   return (
     <div className="relative px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       {/* campaign */}
@@ -26,7 +38,10 @@ function ListPage() {
 
       {/* products */}
       <h1 className="mt-12 text-xl font-semibold">Shoes For You!</h1>
-      <ProductList />
+
+      <Suspense fallback={<Skeleton />}>
+        <ProductList categoryId={categoryId} filter={searchParams} />
+      </Suspense>
     </div>
   );
 }

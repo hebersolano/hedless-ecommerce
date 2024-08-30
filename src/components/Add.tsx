@@ -21,8 +21,6 @@ function Add() {
     });
   }
 
-  console.log(quantity + 1 === stock);
-
   return (
     <div className="flex flex-col gap-6">
       <h4>Choose a Quantity</h4>
