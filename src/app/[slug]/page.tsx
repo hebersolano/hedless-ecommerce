@@ -1,7 +1,6 @@
 import Add from "@/components/Add";
 import CustomizeProducts from "@/components/CustomizeProducts";
 import ProductImages from "@/components/ProductImages";
-import getCategoryBySlug from "@/lib/data-access/getCategoryBySlug";
 import getProductBySlug from "@/lib/data-access/getProductBySlug";
 import { notFound } from "next/navigation";
 
@@ -26,7 +25,7 @@ async function SinglePage({ params }: { params: { slug: string } }) {
 
         <div className="flex items-center gap-4">
           {product.priceData?.price !== product.priceData?.discountedPrice && (
-            <h3 className="text-xl text-muted-foreground line-through">
+            <h3 className="text-xl text-muted-foreground">
               {product.priceData?.formatted?.discountedPrice}
             </h3>
           )}
@@ -36,9 +35,11 @@ async function SinglePage({ params }: { params: { slug: string } }) {
         </div>
         <div className="bg h-[2px] bg-secondary" />
 
-        <div className="bg h-[2px] bg-secondary" />
-
-        <CustomizeProducts />
+        <CustomizeProducts
+          productId={product._id!}
+          variants={product.variants!}
+          productOptions={product.productOptions!}
+        />
         <Add />
 
         <div className="bg h-[2px] bg-secondary" />
