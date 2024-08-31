@@ -7,8 +7,15 @@ import { notFound } from "next/navigation";
 async function SinglePage({ params }: { params: { slug: string } }) {
   const product = await getProductBySlug(params.slug);
 
-  if (!product) notFound();
+  if (!product || !product.visible) notFound();
+  const isProductVariants =
+    product.variants &&
+    product.variants.length > 1 &&
+    product.productOptions &&
+    product.productOptions.length > 0;
 
+  console.log(product);
+  console.log(isProductVariants);
   return (
     <div className="relative flex flex-col gap-16 px-4 md:px-8 lg:flex-row lg:px-16 xl:px-32 2xl:px-64">
       {/* img */}
@@ -35,11 +42,13 @@ async function SinglePage({ params }: { params: { slug: string } }) {
         </div>
         <div className="bg h-[2px] bg-secondary" />
 
-        <CustomizeProducts
-          productId={product._id!}
-          variants={product.variants!}
-          productOptions={product.productOptions!}
-        />
+        {isProductVariants && (
+          <CustomizeProducts
+            productId={product._id!}
+            variants={product.variants!}
+            productOptions={product.productOptions!}
+          />
+        )}
         <Add />
 
         <div className="bg h-[2px] bg-secondary" />
