@@ -45,6 +45,14 @@ function CustomizeProducts({
   console.log("size options", optionSize);
   console.log("color options", optionColors);
 
+  function handleSelection(optionType: string, choice: products.Choice) {
+    // if (!choice.inStock) return;
+    setSelected((prev) => ({
+      ...prev,
+      [optionType]: choice.description!,
+    }));
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {optionColors && (
@@ -53,21 +61,20 @@ function CustomizeProducts({
           <ul className="flex items-center gap-3">
             {optionColors.map((choice) => (
               <li
-                onClick={() =>
-                  setSelected((prev) => ({
-                    ...prev,
-                    Color: choice.description!,
-                  }))
-                }
+                onClick={() => handleSelection("Color", choice)}
                 key={choice.description}
-                style={{ backgroundColor: choice.value }}
-                className="relative h-8 w-8 cursor-pointer rounded-full ring-1 ring-muted-foreground"
+                style={{
+                  backgroundColor: choice.value,
+                  cursor: !choice.inStock ? "not-allowed" : "pointer",
+                  // pointerEvents: !choice.inStock ? "none" : "auto",
+                }}
+                className="relative h-8 w-8 rounded-full ring-1 ring-muted-foreground"
               >
                 <>
                   {!choice.inStock && (
                     <div className="absolute left-1/2 top-1/2 h-[3px] w-10 -translate-x-1/2 -translate-y-1/2 rotate-45 transform rounded-full bg-red-400" />
                   )}
-                  {selected?.Color === choice.description && (
+                  {selected?.Color === choice.description && choice.inStock && (
                     <div className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 transform rounded-full ring-2" />
                   )}
                 </>
@@ -93,14 +100,13 @@ function CustomizeProducts({
                 selected?.Tamaño === choice.description && choice.inStock;
               return (
                 <li
-                  onClick={() =>
-                    setSelected((prev) => ({
-                      ...prev,
-                      Tamaño: choice.description!,
-                    }))
-                  }
+                  onClick={() => handleSelection("Tamaño", choice)}
                   key={choice.description}
-                  className={`cursor-pointer rounded-md px-4 py-1 text-sm text-primary ring-1 ring-primary ${active && "bg-primary text-primary-foreground"} ${!choice.inStock && "bg-primary/40 text-primary-foreground line-through"}`}
+                  style={{
+                    cursor: !choice.inStock ? "not-allowed" : "pointer",
+                    // pointerEvents: !choice.inStock ? "none" : "auto",
+                  }}
+                  className={`rounded-md px-4 py-1 text-sm text-primary ring-1 ring-primary ${active && "bg-primary text-primary-foreground"} ${!choice.inStock && "text-primary line-through"}`}
                 >
                   {choice.description}
                 </li>
