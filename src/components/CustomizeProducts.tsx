@@ -17,10 +17,16 @@ function CustomizeProducts({
   }>({});
 
   const entries = Object.entries(selectedOptions);
-  const selectedVariant = variants.find((variant) => {
-    return entries.every(([key, value]) => variant.choices?.[key] === value);
-  });
-  console.log("selected variant", selectedVariant);
+  const selectedVariant =
+    entries.length <= 1
+      ? undefined
+      : variants.find((variant) => {
+          return entries.every(
+            ([key, value]) => variant.choices?.[key] === value,
+          );
+        });
+
+  // console.log("selected variant", selectedVariant);
   const isInStock = selectedVariant?.stock?.inStock;
 
   const colorOptions = productOptions.find(
@@ -47,8 +53,8 @@ function CustomizeProducts({
     }
   }
 
-  console.log("size options", sizeOptions);
-  console.log("color options", colorOptions);
+  // console.log("size options", sizeOptions);
+  // console.log("color options", colorOptions);
 
   function handleSelection(optionType: string, choice: products.Choice) {
     // if (!choice.inStock) return;

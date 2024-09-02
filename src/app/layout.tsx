@@ -21,13 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider attribute="class" enableSystem={false}>
-          <WixClientProvider>
+        <WixClientProvider>
+          <ThemeProvider attribute="class" enableSystem={false}>
             <Navbar />
-            {children}
-            <Footer />
-          </WixClientProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+          {children}
+          <Footer />
+        </WixClientProvider>
       </body>
     </html>
   );

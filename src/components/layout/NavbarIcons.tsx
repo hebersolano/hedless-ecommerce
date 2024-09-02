@@ -18,16 +18,7 @@ import MenuBox from "../MenuWindows";
 const iconStyle = { height: 23, width: 23 };
 
 function NavbarIcons() {
-  const router = useRouter();
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
   const isLoggedIn = false; //! temporary
-
-  function handleProfile() {
-    if (!isLoggedIn) router.push("/login");
-    setIsProfileOpen((prev) => !prev);
-  }
 
   return (
     <div className="group relative flex flex-none items-center">
@@ -36,7 +27,7 @@ function NavbarIcons() {
         <>
           {/* profile */}
           <MenuBox.Trigger opens="profile-menu">
-            <button className="ml-3 hover:text-primary" onClick={handleProfile}>
+            <button className="ml-3 hover:text-primary">
               <HiOutlineUserCircle style={iconStyle} />
             </button>
           </MenuBox.Trigger>
