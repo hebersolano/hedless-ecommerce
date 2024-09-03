@@ -1,6 +1,6 @@
-import Add from "@/components/Add";
+import Add from "@/app/[slug]/_lib/Add";
 import CustomizeProducts from "@/components/CustomizeProducts";
-import ProductImages from "@/components/ProductImages";
+import ProductImages from "@/app/[slug]/_lib/ProductImages";
 import { SingleProductProvider } from "@/app/[slug]/_lib/SingleProductContext";
 import getProductBySlug from "@/lib/data-access/getProductBySlug";
 import { notFound } from "next/navigation";

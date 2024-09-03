@@ -2,6 +2,7 @@
 import { products } from "@wix/stores";
 import Image from "next/image";
 import { useState } from "react";
+import useSingleProduct from "./useSingleProduct";
 
 // const images = [
 //   {
@@ -22,8 +23,14 @@ import { useState } from "react";
 //   },
 // ];
 
-function ProductImages({ images }: { images: products.MediaItem[] }) {
+function ProductImages({
+  productImages,
+}: {
+  productImages: products.MediaItem[];
+}) {
   const [index, setIndex] = useState(0);
+  const { selectedVariant } = useSingleProduct();
+  const images = selectedVariant?.media?.items || productImages;
 
   return (
     <div>

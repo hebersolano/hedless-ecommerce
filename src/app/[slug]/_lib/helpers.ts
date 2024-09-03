@@ -1,20 +1,36 @@
 import { products } from "@wix/stores";
+import { selectedVariant } from "./types";
 
 export function getSelectedVariant(
   selectedOptions: { [key: string]: string },
   variants: products.Variant[],
-) {
-  const entries = Object.entries(selectedOptions);
+  colorOptions: products.Choice[] | undefined,
+): selectedVariant {
+  // if there are not variants
+  if (variants.length === 1) {
+    return { ...variants[0], media: undefined };
+  }
+
+  const optionEntries = Object.entries(selectedOptions);
+
   const selectedVariant =
-    entries.length <= 1
+    optionEntries.length <= 1
       ? undefined
       : variants.find((variant) => {
-          return entries.every(
+          return optionEntries.every(
             ([key, value]) => variant.choices?.[key] === value,
           );
         });
 
-  return selectedVariant;
+  let media = colorOptions?.[0].media; //default media if there are variants
+  if (colorOptions) {
+    for (const colorOption of colorOptions) {
+      if (colorOption.description === selectedOptions.Color)
+        media = colorOption.media;
+    }
+  }
+
+  return { ...selectedVariant, media };
 }
 
 export function getUserProductOptions(
@@ -40,7 +56,9 @@ export function getUserProductOptions(
       colorIndex++;
     }
     if (choices.Color === selectedOptions!.Color) {
-      if (sizeOptions) sizeOptions[sizeIndex].inStock = variant.stock?.inStock;
+      if (sizeOptions) {
+        sizeOptions[sizeIndex].inStock = variant.stock?.inStock;
+      }
 
       sizeIndex++;
     }

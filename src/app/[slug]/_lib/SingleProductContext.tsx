@@ -1,10 +1,30 @@
 "use client";
 
 import { products } from "@wix/stores";
-import { createContext, ReactNode, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useState,
+} from "react";
 import { getSelectedVariant, getUserProductOptions } from "./helpers";
+import { selectedVariant } from "./types";
 
-export const SingleProductContext = createContext<any>({});
+type ObjectT = {
+  [key: string]: string;
+};
+
+type SingleProductContextT = {
+  selectedOptions: ObjectT;
+  setSelectedOptions: Dispatch<SetStateAction<ObjectT>>;
+  colorOptions: products.Choice[] | undefined;
+  sizeOptions: products.Choice[] | undefined;
+  selectedVariant: selectedVariant;
+};
+export const SingleProductContext = createContext<SingleProductContextT | null>(
+  null,
+);
 
 export function SingleProductProvider({
   children,
@@ -13,19 +33,18 @@ export function SingleProductProvider({
   children: ReactNode;
   product: products.Product;
 }) {
-  const [selectedOptions, setSelectedOptions] = useState<{
-    [key: string]: string;
-  }>({});
-
-  const selectedVariant = getSelectedVariant(
-    selectedOptions,
-    product.variants!,
-  );
+  const [selectedOptions, setSelectedOptions] = useState<ObjectT>({});
 
   const { colorOptions, sizeOptions } = getUserProductOptions(
     product.productOptions!,
     product.variants!,
     selectedOptions,
+  );
+
+  const selectedVariant = getSelectedVariant(
+    selectedOptions,
+    product.variants!,
+    colorOptions,
   );
 
   return (

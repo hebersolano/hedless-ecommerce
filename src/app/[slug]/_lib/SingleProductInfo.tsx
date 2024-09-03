@@ -1,6 +1,6 @@
 "use client";
 
-import Add from "@/components/Add";
+import Add from "@/app/[slug]/_lib/Add";
 import { products } from "@wix/stores";
 import useSingleProduct from "./useSingleProduct";
 import CustomizeProducts from "./CustomizeProducts";

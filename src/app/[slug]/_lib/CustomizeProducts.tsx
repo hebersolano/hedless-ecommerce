@@ -1,7 +1,6 @@
 "use client";
 
 import { type products } from "@wix/stores";
-import { useState } from "react";
 import useSingleProduct from "./useSingleProduct";
 
 function CustomizeProducts() {
