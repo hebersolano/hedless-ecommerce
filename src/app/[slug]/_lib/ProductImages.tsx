@@ -4,25 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import useSingleProduct from "./useSingleProduct";
 
-// const images = [
-//   {
-//     id: 1,
-//     url: "https://images.pexels.com/photos/1088491/pexels-photo-1088491.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-//   },
-//   {
-//     id: 2,
-//     url: "https://images.pexels.com/photos/45889/camera-photo-camera-sony-alpha-7-sony-45889.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-//   },
-//   {
-//     id: 3,
-//     url: "https://images.pexels.com/photos/8456847/pexels-photo-8456847.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-//   },
-//   {
-//     id: 4,
-//     url: "https://images.pexels.com/photos/1787236/pexels-photo-1787236.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-//   },
-// ];
-
 function ProductImages({
   productImages,
 }: {

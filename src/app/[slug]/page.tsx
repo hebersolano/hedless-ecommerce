@@ -5,22 +5,20 @@ import { SingleProductProvider } from "@/app/[slug]/_lib/SingleProductContext";
 import getProductBySlug from "@/lib/data-access/getProductBySlug";
 import { notFound } from "next/navigation";
 import SingleProductInfo from "./_lib/SingleProductInfo";
+import { getDefaultProductOptions, hasProductVariants } from "./_lib/helpers";
 
 async function SinglePage({ params }: { params: { slug: string } }) {
   const product = await getProductBySlug(params.slug);
 
   if (!product || !product.visible) notFound();
-  const isProductVariants =
-    product.variants &&
-    product.variants.length > 1 &&
-    product.productOptions &&
-    product.productOptions.length > 0;
+  const isProductVariants = hasProductVariants(product);
+  const defaultOptions = getDefaultProductOptions(isProductVariants, product);
 
   console.log(product);
   // console.log(isProductVariants);
   return (
     <div className="relative flex flex-col gap-16 px-4 md:px-8 lg:flex-row lg:px-16 xl:px-32 2xl:px-64">
-      <SingleProductProvider product={product}>
+      <SingleProductProvider product={product} defaultOptions={defaultOptions}>
         {/* img */}
         <div className="top-20 h-max w-full lg:sticky lg:w-1/2">
           <ProductImages productImages={product.media?.items!} />

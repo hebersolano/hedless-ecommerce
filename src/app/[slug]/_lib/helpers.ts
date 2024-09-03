@@ -1,6 +1,36 @@
 import { products } from "@wix/stores";
 import { selectedVariant } from "./types";
 
+export function isVariantInStock(variant: products.Variant) {
+  return Boolean(
+    variant.stock?.trackQuantity
+      ? variant.stock?.inStock && variant.stock.quantity
+      : variant.stock?.inStock,
+  );
+}
+
+export function hasProductVariants(product: products.Product) {
+  return Boolean(
+    product.variants &&
+      product.variants.length > 1 &&
+      product.productOptions &&
+      product.productOptions.length > 0,
+  );
+}
+
+export function getDefaultProductOptions(
+  isProductVariants: boolean,
+  product: products.Product,
+) {
+  if (!isProductVariants) return {};
+
+  const variantInStock = product.variants?.find((variant) =>
+    isVariantInStock(variant),
+  );
+
+  return variantInStock?.choices || {};
+}
+
 export function getSelectedVariant(
   selectedOptions: { [key: string]: string },
   variants: products.Variant[],
@@ -51,13 +81,13 @@ export function getUserProductOptions(
     const choices = variant.choices!;
     if (choices.Tamaño === selectedOptions!.Tamaño) {
       if (colorOptions)
-        colorOptions[colorIndex].inStock = variant.stock?.inStock;
+        colorOptions[colorIndex].inStock = isVariantInStock(variant);
 
       colorIndex++;
     }
     if (choices.Color === selectedOptions!.Color) {
       if (sizeOptions) {
-        sizeOptions[sizeIndex].inStock = variant.stock?.inStock;
+        sizeOptions[sizeIndex].inStock = isVariantInStock(variant);
       }
 
       sizeIndex++;

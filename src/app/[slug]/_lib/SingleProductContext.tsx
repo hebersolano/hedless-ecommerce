@@ -29,11 +29,14 @@ export const SingleProductContext = createContext<SingleProductContextT | null>(
 export function SingleProductProvider({
   children,
   product,
+  defaultOptions,
 }: {
   children: ReactNode;
   product: products.Product;
+  defaultOptions: ObjectT;
 }) {
-  const [selectedOptions, setSelectedOptions] = useState<ObjectT>({});
+  const [selectedOptions, setSelectedOptions] =
+    useState<ObjectT>(defaultOptions);
 
   const { colorOptions, sizeOptions } = getUserProductOptions(
     product.productOptions!,

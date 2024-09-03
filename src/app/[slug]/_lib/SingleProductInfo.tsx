@@ -11,8 +11,11 @@ function SingleProductInfo({
   product: products.Product;
   isProductVariants: boolean | undefined;
 }) {
-  const context = useSingleProduct();
-  console.log("from single product context:", context);
+  const { selectedVariant } = useSingleProduct();
+  const priceData = selectedVariant.variant?.priceData;
+  const isDiscount = priceData?.price !== priceData?.discountedPrice;
+  console.log("product:", product);
+  console.log("selected variant:", selectedVariant);
 
   return (
     <>
@@ -22,13 +25,16 @@ function SingleProductInfo({
       <div className="bg h-[2px] bg-secondary" />
 
       <div className="flex items-center gap-4">
-        {product.priceData?.price !== product.priceData?.discountedPrice && (
-          <h3 className="text-xl text-muted-foreground">
-            {product.priceData?.formatted?.discountedPrice}
+        {isDiscount && (
+          <h3 className="text-xl text-muted-foreground line-through">
+            {priceData?.formatted?.price}
           </h3>
         )}
+
         <h2 className="text-2xl font-medium">
-          {product.priceData?.formatted?.price}
+          {isDiscount
+            ? priceData?.formatted?.discountedPrice
+            : priceData?.formatted?.price}
         </h2>
       </div>
       <div className="bg h-[2px] bg-secondary" />
