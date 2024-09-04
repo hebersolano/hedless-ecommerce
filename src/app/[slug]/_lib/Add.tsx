@@ -2,17 +2,13 @@
 
 import { useEffect, useState } from "react";
 import useSingleProduct from "./useSingleProduct";
-import { isVariantInStock } from "./helpers";
+import { getVariantStock, isVariantInStock } from "./helpers";
 
 function Add() {
   const [quantity, setQuantity] = useState(1);
-  const { selectedVariant } = useSingleProduct();
+  const { selectedVariant, setSelectedOptions } = useSingleProduct();
 
-  //temporary
-  const inStock = isVariantInStock(selectedVariant);
-  const stock = selectedVariant.stock?.quantity
-    ? selectedVariant.stock?.quantity
-    : 0;
+  const { inStock, trackStock, stock } = getVariantStock(selectedVariant);
 
   useEffect(
     function () {
@@ -21,9 +17,7 @@ function Add() {
     [stock],
   );
 
-  console.log("stock:", selectedVariant.stock?.inStock, stock);
-
-  function updateQuantity(operator: "+" | "-") {
+  function updateQuantityHandler(operator: "+" | "-") {
     setQuantity((prev) => {
       if (operator === "+") {
         if (prev >= stock) return stock;
@@ -36,13 +30,17 @@ function Add() {
     });
   }
 
+  function addButtonHandler(quantity: number) {
+    setSelectedOptions((prev) => ({ ...prev, quantity }));
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <h4>Choose a Quantity</h4>
       <div className="flex items-center gap-4">
         <div className="flex items-center justify-center">
           <button
-            onClick={() => updateQuantity("-")}
+            onClick={() => updateQuantityHandler("-")}
             disabled={!inStock}
             className={
               "cursor-pointe rounded-l-full border-r border-background bg-muted px-3 py-1 hover:bg-primary hover:text-primary-foreground" +
@@ -53,14 +51,14 @@ function Add() {
           </button>
           <span className="bg-muted px-3 py-1">{quantity}</span>
           <button
-            onClick={() => updateQuantity("+")}
+            onClick={() => updateQuantityHandler("+")}
             disabled={!inStock || quantity === stock}
             className="cursor-pointer rounded-r-full border-l border-background bg-muted px-3 py-1 hover:bg-primary hover:text-primary-foreground"
           >
             +
           </button>
         </div>
-        {inStock && (
+        {trackStock && stock > 0 && (
           <p className="text-xs">
             Only{" "}
             <span className="font-semibold text-primary">{stock} items</span>{" "}
@@ -69,7 +67,10 @@ function Add() {
           </p>
         )}
       </div>
-      <button className="mt-10 w-36 rounded-3xl px-4 py-2 text-sm text-primary ring-1 ring-primary hover:bg-primary hover:text-primary-foreground disabled:cursor-not-allowed disabled:bg-primary/40 disabled:text-primary-foreground">
+      <button
+        onClick={addButtonHandler.bind(null, quantity)}
+        className="mt-10 w-36 rounded-3xl px-4 py-2 text-sm text-primary ring-1 ring-primary hover:bg-primary hover:text-primary-foreground disabled:cursor-not-allowed disabled:bg-primary/40 disabled:text-primary-foreground"
+      >
         Add to Cart
       </button>
     </div>

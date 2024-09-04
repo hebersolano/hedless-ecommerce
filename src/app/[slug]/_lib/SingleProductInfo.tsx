@@ -6,16 +6,18 @@ import useSingleProduct from "./useSingleProduct";
 import CustomizeProducts from "./CustomizeProducts";
 function SingleProductInfo({
   product,
-  isProductVariants,
+  isProductOptions,
 }: {
   product: products.Product;
-  isProductVariants: boolean | undefined;
+  isProductOptions: boolean | undefined;
 }) {
-  const { selectedVariant } = useSingleProduct();
+  const { selectedVariant, selectedOptions } = useSingleProduct();
   const priceData = selectedVariant.variant?.priceData;
   const isDiscount = priceData?.price !== priceData?.discountedPrice;
+
   console.log("product:", product);
   console.log("selected variant:", selectedVariant);
+  console.log("selected options:", selectedOptions);
 
   return (
     <>
@@ -39,7 +41,7 @@ function SingleProductInfo({
       </div>
       <div className="bg h-[2px] bg-secondary" />
 
-      {isProductVariants && <CustomizeProducts />}
+      {isProductOptions && <CustomizeProducts />}
       <Add />
     </>
   );

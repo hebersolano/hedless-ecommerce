@@ -1,28 +1,33 @@
 import { products } from "@wix/stores";
-import { selectedVariant } from "./types";
+import { ObjectT, selectedVariant } from "./types";
 
 export function isVariantInStock(variant: products.Variant) {
   return Boolean(
     variant.stock?.trackQuantity
-      ? variant.stock?.inStock && variant.stock.quantity
+      ? variant.stock?.inStock &&
+          variant.stock.quantity &&
+          variant.stock.quantity > 0
       : variant.stock?.inStock,
   );
 }
 
-export function hasProductVariants(product: products.Product) {
-  return Boolean(
-    product.variants &&
-      product.variants.length > 1 &&
-      product.productOptions &&
-      product.productOptions.length > 0,
-  );
+export function getVariantStock(variant: products.Variant) {
+  const inStock = isVariantInStock(variant);
+  const trackStock = Boolean(variant.stock?.trackQuantity);
+  const stock = trackStock ? variant.stock?.quantity || 0 : Infinity;
+
+  return { inStock, trackStock, stock };
+}
+
+export function hasProductOptions(product: products.Product) {
+  return Boolean(product.productOptions && product.productOptions.length > 0);
 }
 
 export function getDefaultProductOptions(
-  isProductVariants: boolean,
+  isProductOptions: boolean,
   product: products.Product,
 ) {
-  if (!isProductVariants) return {};
+  if (!isProductOptions || product.variants?.length === 1) return {};
 
   const variantInStock = product.variants?.find((variant) =>
     isVariantInStock(variant),
@@ -32,14 +37,12 @@ export function getDefaultProductOptions(
 }
 
 export function getSelectedVariant(
-  selectedOptions: { [key: string]: string },
+  selectedOptions: ObjectT,
   variants: products.Variant[],
   colorOptions: products.Choice[] | undefined,
 ): selectedVariant {
   // if there are not variants
-  if (variants.length === 1) {
-    return { ...variants[0], media: undefined };
-  }
+  if (variants.length === 1) return { ...variants[0], media: undefined };
 
   const optionEntries = Object.entries(selectedOptions);
 
@@ -52,7 +55,7 @@ export function getSelectedVariant(
           );
         });
 
-  let media = colorOptions?.[0].media; //default media if there are variants
+  let media;
   if (colorOptions) {
     for (const colorOption of colorOptions) {
       if (colorOption.description === selectedOptions.Color)
@@ -66,8 +69,12 @@ export function getSelectedVariant(
 export function getUserProductOptions(
   productOptions: products.ProductOption[],
   variants: products.Variant[],
-  selectedOptions: { [key: string]: string },
+  selectedOptions: ObjectT,
 ) {
+  // if there are not variants
+  // if (variants.length === 1)
+  //   return { colorOptions: undefined, sizeOptions: undefined };
+
   const colorOptions = productOptions.find(
     (option) => option.name === "Color",
   )?.choices;

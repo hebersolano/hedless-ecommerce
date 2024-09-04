@@ -9,11 +9,7 @@ import {
   useState,
 } from "react";
 import { getSelectedVariant, getUserProductOptions } from "./helpers";
-import { selectedVariant } from "./types";
-
-type ObjectT = {
-  [key: string]: string;
-};
+import { ObjectT, selectedVariant } from "./types";
 
 type SingleProductContextT = {
   selectedOptions: ObjectT;
@@ -49,6 +45,8 @@ export function SingleProductProvider({
     product.variants!,
     colorOptions,
   );
+
+  console.log(sizeOptions);
 
   return (
     <SingleProductContext.Provider
