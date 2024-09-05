@@ -4,14 +4,9 @@ import CategoryList from "@/components/CategoryList";
 import NewProductList from "@/components/NewProductList";
 import ProductList from "@/components/ProductList";
 import Slider from "@/components/Slider";
-import wixClientServer from "@/lib/wixClientServer";
 import Skeleton from "@/components/Skeleton";
 
 async function HomePage() {
-  // const wixClient = wixClientServer();
-  // const res = await wixClient.products.queryProducts().find();
-  // console.log(res);
-
   return (
     <div className="bg-background">
       <Slider />

@@ -1,15 +1,13 @@
+import { Suspense } from "react";
+import Image from "next/image";
+
 import Filter from "@/components/Filter";
 import ProductList from "@/components/ProductList";
 import Skeleton from "@/components/Skeleton";
 import getCategoryBySlug from "@/lib/data-access/getCategoryBySlug";
-import Image from "next/image";
-import { Suspense } from "react";
+import { searchParamsT } from "@/lib/types";
 
-async function ListPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) {
+async function ListPage({ searchParams }: { searchParams: searchParamsT }) {
   const cat = searchParams.cat || "all-products";
   const category = await getCategoryBySlug(cat);
   const categoryId =
@@ -37,10 +35,12 @@ async function ListPage({
       <Filter />
 
       {/* products */}
-      <h1 className="mt-12 text-xl font-semibold">Shoes For You!</h1>
+      <h1 className="mt-12 text-xl font-semibold">
+        {category.collection?.name} For You!
+      </h1>
 
       <Suspense fallback={<Skeleton />}>
-        <ProductList categoryId={categoryId} filter={searchParams} />
+        <ProductList categoryId={categoryId} searchParams={searchParams} />
       </Suspense>
     </div>
   );

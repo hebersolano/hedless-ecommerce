@@ -1,5 +1,6 @@
 import getProductsByCategory from "@/lib/data-access/getProductsByCategory";
 import getShortDescription from "@/lib/getShortDescription";
+import { searchParamsT } from "@/lib/types";
 import { type products } from "@wix/stores";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,13 +8,17 @@ import Link from "next/link";
 async function ProductList({
   categoryId,
   limit,
-  filter,
+  searchParams = {},
 }: {
   categoryId: string;
   limit?: number;
-  filter?: { [key: string]: string | undefined };
+  searchParams?: searchParamsT;
 }) {
-  const products = await getProductsByCategory({ categoryId, limit });
+  const products = await getProductsByCategory({
+    categoryId,
+    limit,
+    searchParams,
+  });
 
   return (
     <div className="mt-12 flex flex-wrap justify-between gap-x-8 gap-y-16">
