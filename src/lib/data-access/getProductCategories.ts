@@ -1,7 +1,7 @@
-import wixClientServer from "../wixClientServer";
+import { getWixClient } from "../wixClientServer";
 
 export default async function getProductCategories() {
-  const wixClient = wixClientServer();
+  const wixClient = getWixClient();
 
   const categories = await wixClient.collections.queryCollections().find();
 

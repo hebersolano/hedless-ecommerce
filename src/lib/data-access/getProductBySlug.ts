@@ -1,7 +1,7 @@
-import wixClientServer from "../wixClientServer";
+import { getWixClient } from "../wixClientServer";
 
 export default async function getProductBySlug(slug: string) {
-  const wixClient = wixClientServer();
+  const wixClient = getWixClient();
 
   const product = await wixClient.products
     .queryProducts()

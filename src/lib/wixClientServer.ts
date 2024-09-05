@@ -20,9 +20,9 @@ export type wixClientT = WixClient<
   }
 >;
 
-export function createWixClient() {
+export function getWixClient() {
   if (global.wixClient) {
-    console.log("using cache client");
+    console.log("using cache wix client");
     return global.wixClient;
   }
   const wixClient = wixClientServer();
@@ -30,7 +30,9 @@ export function createWixClient() {
   return wixClient;
 }
 
-export default function wixClientServer() {
+export function wixClientServer() {
+  console.log("creating wix client");
+
   let refreshToken;
 
   try {
@@ -57,8 +59,6 @@ export default function wixClientServer() {
       },
     }),
   });
-
-  console.log("creating wix client");
 
   return wixClient;
 }

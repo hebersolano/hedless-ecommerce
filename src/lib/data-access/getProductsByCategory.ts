@@ -1,5 +1,5 @@
 import { searchParamsT } from "../types";
-import wixClientServer from "../wixClientServer";
+import { getWixClient } from "../wixClientServer";
 
 const PRODUCTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_PRODUCTS_PER_PAGE);
 
@@ -10,8 +10,6 @@ type sortByT =
   | "productType"
   | "sku"
   | "price"
-  | "priceData.price"
-  | "numericId"
   | "lastUpdated";
 
 export default async function getProductsByCategory({
@@ -24,11 +22,10 @@ export default async function getProductsByCategory({
   searchParams: searchParamsT;
 }) {
   if (!categoryId) throw Error("categoryId is required");
-  console.log(searchParams);
   const { name, type, min, max, sort } = searchParams;
 
   let query;
-  const wixClient = wixClientServer();
+  const wixClient = getWixClient();
 
   query = wixClient.products
     .queryProducts()
