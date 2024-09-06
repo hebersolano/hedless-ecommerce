@@ -4,6 +4,7 @@ import { searchParamsT } from "@/lib/types";
 import { type products } from "@wix/stores";
 import Image from "next/image";
 import Link from "next/link";
+import Pagination from "./Pagination";
 
 async function ProductList({
   categoryId,
@@ -14,18 +15,23 @@ async function ProductList({
   limit?: number;
   searchParams?: searchParamsT;
 }) {
-  const products = await getProductsByCategory({
+  const { products, pagination } = await getProductsByCategory({
     categoryId,
     limit,
     searchParams,
   });
 
+  console.log(products);
+
   return (
-    <div className="mt-12 flex flex-wrap justify-between gap-x-8 gap-y-16">
-      {products.items.map((product) => (
-        <ProductListItem key={product._id} product={product} />
-      ))}
-    </div>
+    <>
+      <div className="mt-12 flex flex-wrap justify-between gap-x-8 gap-y-16">
+        {products.items.map((product) => (
+          <ProductListItem key={product._id} product={product} />
+        ))}
+      </div>
+      {<Pagination pagination={pagination} searchParams={searchParams} />}
+    </>
   );
 }
 

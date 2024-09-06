@@ -1,3 +1,4 @@
+import { products } from "@wix/stores";
 import { searchParamsT } from "../types";
 import { getWixClient } from "../wixClientServer";
 
@@ -43,6 +44,16 @@ export default async function getProductsByCategory({
   }
 
   const products = await query.find();
+  const pagination = getProductsPagination(products);
 
-  return products;
+  return { products, pagination };
+}
+
+function getProductsPagination(products: products.ProductsQueryResult) {
+  return {
+    currentPage: products.currentPage,
+    totalPages: products.totalPages,
+    hasNextPage: products.hasNext(),
+    hasPrevPage: products.hasPrev(),
+  };
 }

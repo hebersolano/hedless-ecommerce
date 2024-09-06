@@ -1,9 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import {
   HiOutlineUserCircle,
   HiOutlineBell,
@@ -12,14 +9,11 @@ import {
 
 import CartModal from "./CartModal";
 import ThemeToggle from "../ThemeToggle";
-import Modal from "../Modal";
 import MenuBox from "../MenuWindows";
 
 const iconStyle = { height: 23, width: 23 };
 
 function NavbarIcons() {
-  const isLoggedIn = false; //! temporary
-
   return (
     <div className="group relative flex flex-none items-center">
       <ThemeToggle iconStyle={iconStyle} />

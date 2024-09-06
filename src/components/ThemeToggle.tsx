@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  SVGAttributes,
-  CSSProperties,
-  ReactSVGElement,
-} from "react";
+import { useState, useEffect, CSSProperties } from "react";
 import { useTheme } from "next-themes";
 import { HiOutlineSun } from "react-icons/hi2";
 import { HiOutlineMoon } from "react-icons/hi2";
