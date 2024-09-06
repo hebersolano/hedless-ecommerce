@@ -21,16 +21,16 @@ async function ProductList({
     searchParams,
   });
 
-  console.log(products);
-
   return (
     <>
-      <div className="mt-12 flex flex-wrap justify-between gap-x-8 gap-y-16">
+      <div className="mt-12 flex flex-wrap justify-evenly gap-x-8 gap-y-16">
         {products.items.map((product) => (
           <ProductListItem key={product._id} product={product} />
         ))}
       </div>
-      {<Pagination pagination={pagination} searchParams={searchParams} />}
+      {!limit && (
+        <Pagination pagination={pagination} searchParams={searchParams} />
+      )}
     </>
   );
 }

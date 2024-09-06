@@ -3,6 +3,7 @@ import { searchParamsT } from "../types";
 import { getWixClient } from "../wixClientServer";
 
 const PRODUCTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_PRODUCTS_PER_PAGE);
+if (!PRODUCTS_PER_PAGE) throw new Error("No env values available");
 
 type sortByT =
   | "name"
@@ -23,7 +24,7 @@ export default async function getProductsByCategory({
   searchParams: searchParamsT;
 }) {
   if (!categoryId) throw Error("categoryId is required");
-  const { name, type, min, max, sort } = searchParams;
+  const { name, type, min, max, sort, page } = searchParams;
 
   let query;
   const wixClient = getWixClient();
@@ -36,6 +37,12 @@ export default async function getProductsByCategory({
     .gt("priceData.price", min || 0)
     .lt("priceData.price", max || 999999)
     .limit(limit || PRODUCTS_PER_PAGE);
+
+  if (page) {
+    let currentPage = parseInt(page) || 0;
+    let skipProduct = currentPage * PRODUCTS_PER_PAGE;
+    if (currentPage > 0) query = query.skip(skipProduct);
+  }
 
   if (sort) {
     const [sortType, sortBy] = sort.split("-");

@@ -1,6 +1,6 @@
 import { products } from "@wix/stores";
 
-export type searchParamsT = { [key: string]: string | undefined };
+export type searchParamsT = { [key: string]: string };
 
 export type paginationT = {
   currentPage: number | undefined;
