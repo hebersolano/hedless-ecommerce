@@ -45,9 +45,10 @@ export function getSelectedVariant(
   if (variants.length === 1) return { ...variants[0], media: undefined };
 
   const optionEntries = Object.entries(selectedOptions);
+  console.log(optionEntries);
 
   const selectedVariant =
-    optionEntries.length <= 1
+    optionEntries.length < 1
       ? undefined
       : variants.find((variant) => {
           return optionEntries.every(

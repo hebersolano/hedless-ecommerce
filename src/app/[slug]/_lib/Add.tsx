@@ -6,9 +6,11 @@ import { getVariantStock, isVariantInStock } from "./helpers";
 
 function Add() {
   const [quantity, setQuantity] = useState(1);
-  const { selectedVariant, setSelectedOptions } = useSingleProduct();
+  const { selectedVariant, setSelectedOptions, selectedOptions } =
+    useSingleProduct();
 
   const { inStock, trackStock, stock } = getVariantStock(selectedVariant);
+  console.log(trackStock, stock);
 
   useEffect(
     function () {
@@ -64,6 +66,18 @@ function Add() {
             <span className="font-semibold text-primary">{stock} items</span>{" "}
             left!
             <br /> Don&apos;t miss it
+          </p>
+        )}
+        {trackStock && stock < 1 && (
+          <p className="text-xs">
+            <span className="font-semibold">
+              {Object.entries(selectedOptions)
+                .map(([key, value]) => key + ": " + value)
+                .join(", ")}
+            </span>
+            <br />
+            Unfortunately, this variant is currently out of stock. Please select
+            another option.
           </p>
         )}
       </div>
