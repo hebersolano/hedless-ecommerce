@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { createContext, ReactNode } from "react";
 
 function createWixClient() {
+  console.log("creating wix client");
   const refreshToken = JSON.parse(Cookies.get("refreshToken") || "{}");
 
   const wixClient = createClient({
@@ -25,6 +26,8 @@ function createWixClient() {
       },
     }),
   });
+
+  return wixClient;
 }
 
 const wixClient = createWixClient();

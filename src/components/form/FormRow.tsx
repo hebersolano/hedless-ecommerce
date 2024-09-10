@@ -22,7 +22,7 @@ function FormRow({
   const className = twMerge(
     children.props.className || "",
     "rounded-md px-4 py-2 ring-2 ring-border",
-    error && "ring-destructive  focus:ring-destructive focus:outline-none ",
+    error && "ring-primary  focus:ring-primary focus:outline-none ",
   );
 
   const placeholder = `${children.props.placeholder}${required && !label ? "*" : ""}`;
@@ -32,12 +32,12 @@ function FormRow({
       {label && (
         <label htmlFor={children.props?.id} className={twJoin("", labelStyle)}>
           {label}
-          {required && <span className="text-destructive">*</span>}
+          {required && <span className="text-primary">*</span>}
         </label>
       )}
       {cloneElement(children, { className, placeholder })}
       {error && (
-        <span className="absolute -bottom-6 ml-1 text-sm text-destructive">
+        <span className="absolute -bottom-6 ml-1 text-sm text-primary">
           {error?.message}
         </span>
       )}

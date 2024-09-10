@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { ThemeProvider } from "next-themes";
 import { WixClientProvider } from "@/context/WixContext";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
@@ -22,9 +21,7 @@ export default function RootLayout({
     <html lang="en" className="light" style={{ colorScheme: "light" }}>
       <body className={inter.className}>
         <WixClientProvider>
-          <ThemeProvider attribute="class" enableSystem={false}>
-            <Navbar />
-          </ThemeProvider>
+          <Navbar />
           {children}
           <Footer />
         </WixClientProvider>

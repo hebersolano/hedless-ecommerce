@@ -53,7 +53,7 @@ function LoginPage({ searchParams }: { searchParams: searchParamsT }) {
   console.log(formMode);
 
   return (
-    <div className="flex h-[calc(100vh-80px)] items-center justify-center px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
+    <div className="flex h-[calc(100vh-80px)] flex-col items-center justify-center gap-6 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       <LoginForm formMode={formMode} />
     </div>
   );

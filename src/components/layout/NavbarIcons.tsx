@@ -10,13 +10,16 @@ import {
 import CartModal from "./CartModal";
 import ThemeToggle from "../ThemeToggle";
 import MenuBox from "../MenuWindows";
+import { ThemeProvider } from "next-themes";
 
 const iconStyle = { height: 23, width: 23 };
 
 function NavbarIcons() {
   return (
     <div className="group relative flex flex-none items-center">
-      <ThemeToggle iconStyle={iconStyle} />
+      <ThemeProvider attribute="class" enableSystem={false}>
+        <ThemeToggle iconStyle={iconStyle} />
+      </ThemeProvider>
       <MenuBox>
         <>
           {/* profile */}
