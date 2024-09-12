@@ -7,8 +7,8 @@ import { FormMode } from "./login-types";
 import OAuthLoginButton from "./OAuthLoginButton";
 import useWixClient from "@/hooks/useWixClient";
 import { useRouter } from "next/navigation";
-import { updateRefreshToken } from "./updateRefreshToken";
-import { LoginState } from "@wix/sdk";
+import { setRefreshToken } from "./setRefreshToken";
+import { LoginState, StateMachine } from "@wix/sdk";
 
 const requiredField = { required: "This field is required" };
 
@@ -49,15 +49,14 @@ function LoginForm({
   const onSubmit: SubmitHandler<LoginInputs> = async function (formData) {
     console.log(formData);
 
-    let response;
+    let response: StateMachine | undefined = undefined;
+
     switch (mode) {
       case "login":
-        response = await wixClient.auth
-          .login({
-            email: formData.email,
-            password: formData.password,
-          })
-          .catch((e) => console.log("my error", e));
+        response = await wixClient.auth.login({
+          email: formData.email,
+          password: formData.password,
+        });
         break;
 
       case "register":
@@ -81,9 +80,6 @@ function LoginForm({
           },
         );
         break;
-
-      default:
-        break;
     }
     console.log(response);
 
@@ -95,15 +91,17 @@ function LoginForm({
         console.log("email verification");
         router.push(`?f=verification&st=${response.data.stateToken}`);
         break;
+
       case LoginState.SUCCESS:
         console.log("success");
         const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
           response.data.sessionToken,
         );
         wixClient.auth.setTokens(tokens);
-        updateRefreshToken(tokens.refreshToken);
+        setRefreshToken(tokens.refreshToken.value);
         router.replace("/");
         break;
+
       case LoginState.FAILURE:
         console.log("failure");
         break;

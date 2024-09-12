@@ -65,14 +65,15 @@ function Content({ children, name }: { children: ReactElement; name: string }) {
           onCloseMenu?.();
         }
       }
-      document.addEventListener("click", handleClickOutside, true);
+      document.addEventListener("mouseup", handleClickOutside, true);
 
       return () => {
-        document.removeEventListener("click", handleClickOutside, true);
+        document.removeEventListener("mouseup", handleClickOutside, true);
       };
     },
     [onCloseMenu, openMenuName],
   );
+
   if (name !== openMenuName) return null;
 
   return (

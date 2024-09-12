@@ -1,6 +1,7 @@
 import {
   createClient,
   OAuthStrategy,
+  TokenRole,
   type IOAuthStrategy,
   type WixClient,
 } from "@wix/sdk";
@@ -22,28 +23,31 @@ export type wixClientT = WixClient<
   }
 >;
 
+function getRefreshToken() {
+  const cookieStore = cookies();
+  const refreshToken = cookieStore.get("refreshToken");
+  if (!refreshToken || !refreshToken.value) return "";
+  return refreshToken.value;
+}
+
 export function getWixClient() {
-  if (global.wixClient) {
-    console.log("using cache wix client");
-    return global.wixClient;
-  }
+  // if (global.wixClient) {
+  //   console.log("using cache wix client");
+  //   const isLogged = global.wixClient.auth.loggedIn();
+  //   console.log("server log", isLogged);
+  //   return global.wixClient;
+  // }
   const wixClient = wixClientServer();
-  global.wixClient = wixClient;
+  // global.wixClient = wixClient;
+  const isLogged = wixClient.auth.loggedIn();
+  console.log("server log", isLogged);
   return wixClient;
 }
 
 export function wixClientServer() {
   console.log("creating wix client");
 
-  let refreshToken;
-
-  try {
-    const cookieStore = cookies();
-    refreshToken = JSON.parse(cookieStore.get("refreshToken")?.value || "{}");
-    console.log(refreshToken);
-  } catch (error) {
-    console.log("Error getting refresh token", error);
-  }
+  let refreshToken = getRefreshToken();
 
   const wixClient = createClient({
     modules: {
@@ -58,7 +62,10 @@ export function wixClientServer() {
           value: "",
           expiresAt: 0,
         },
-        refreshToken,
+        refreshToken: {
+          value: refreshToken,
+          role: TokenRole.MEMBER,
+        },
       },
     }),
   });

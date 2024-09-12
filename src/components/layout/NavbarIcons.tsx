@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   HiOutlineUserCircle,
   HiOutlineBell,
@@ -11,12 +10,14 @@ import CartModal from "./CartModal";
 import ThemeToggle from "../ThemeToggle";
 import MenuBox from "../MenuWindows";
 import { ThemeProvider } from "next-themes";
+import dynamic from "next/dynamic";
+import { ProfileMenu } from "./ProfileMenu";
 
 const iconStyle = { height: 23, width: 23 };
 
 function NavbarIcons() {
   return (
-    <div className="group relative flex flex-none items-center">
+    <div className="relative flex flex-none items-center">
       <ThemeProvider attribute="class" enableSystem={false}>
         <ThemeToggle iconStyle={iconStyle} />
       </ThemeProvider>
@@ -29,10 +30,7 @@ function NavbarIcons() {
             </button>
           </MenuBox.Trigger>
           <MenuBox.Content name="profile-menu">
-            <div className="absolute left-0 top-12 z-20 rounded-md bg-background p-4 text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-              <Link href="/">Profile</Link>
-              <div className="mt-2 cursor-pointer">Logout</div>
-            </div>
+            <ProfileMenu />
           </MenuBox.Content>
 
           {/* notifications */}
