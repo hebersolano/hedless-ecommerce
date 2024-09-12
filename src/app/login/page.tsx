@@ -1,25 +1,16 @@
 import type { searchParamsT } from "@/lib/types";
 import LoginForm from "./_lib/LoginForm";
-import { FormMode } from "./_lib/login-types";
+import { FormMode, Mode } from "./_lib/login-types";
 
-enum MODE {
-  LOGIN = "LOGIN",
-  REGISTER = "REGISTER",
-  RESET_PASSWORD = "RESET_PASSWORD",
-  EMAIL_VERIFICATION = "EMAIL_VERIFICATION",
-}
-
-type Modes = "login" | "register" | "reset";
-
-const formModes = new Map<Modes, FormMode>([
+const formModes = new Map<Mode, FormMode>([
   [
     "login",
     {
       mode: "login",
       formTitle: "Login",
       buttonTitle: "Login",
-      username: true,
-      email: false,
+      username: false,
+      email: true,
       password: true,
     },
   ],
@@ -28,7 +19,7 @@ const formModes = new Map<Modes, FormMode>([
     {
       mode: "register",
       formTitle: "Register",
-      buttonTitle: "Legist",
+      buttonTitle: "Sign up",
       username: true,
       email: true,
       password: true,
@@ -45,22 +36,29 @@ const formModes = new Map<Modes, FormMode>([
       password: false,
     },
   ],
+  [
+    "verification",
+    {
+      mode: "verification",
+      formTitle: "Verify email",
+      buttonTitle: "Verify",
+      username: false,
+      email: false,
+      password: false,
+    },
+  ],
 ]);
 
 function LoginPage({ searchParams }: { searchParams: searchParamsT }) {
   const paramMode = searchParams.f || "login";
-  const formMode = formModes.get(paramMode as Modes) as FormMode;
-  console.log(formMode);
+  const stateToken = searchParams.st || "";
+  const formMode = formModes.get(paramMode as Mode) as FormMode;
 
   return (
     <div className="flex h-[calc(100vh-80px)] flex-col items-center justify-center gap-6 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
-      <LoginForm formMode={formMode} />
+      <LoginForm formMode={formMode} stateToken={stateToken} />
     </div>
   );
 }
 
 export default LoginPage;
-
-function Register() {
-  return <form action=""></form>;
-}

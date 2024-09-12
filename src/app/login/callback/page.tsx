@@ -4,7 +4,7 @@ import useWixClient from "@/hooks/useWixClient";
 import { useRouter } from "next/navigation";
 import { getOAuthData } from "../_lib/helpers";
 import { useEffect, useState } from "react";
-import { PropagateLoader, SyncLoader } from "react-spinners";
+import { PropagateLoader } from "react-spinners";
 
 function CallbackPage() {
   const [state, setState] = useState("authenticating");
@@ -12,30 +12,17 @@ function CallbackPage() {
   const router = useRouter();
 
   useEffect(function () {
-    const returnedOAuthData = wixClient.auth.parseFromUrl();
-    if (returnedOAuthData.error) {
-      console.log(
-        returnedOAuthData.error,
-        `Error: ${returnedOAuthData.errorDescription}`,
-      );
-      setState("error");
-      router.replace("/");
-    }
-
+    const UrlOAuthData = wixClient.auth.parseFromUrl();
     const oAuthData = getOAuthData(wixClient);
 
     wixClient.auth
-      .getMemberTokens(
-        returnedOAuthData.code,
-        returnedOAuthData.state,
-        oAuthData,
-      )
+      .getMemberTokens(UrlOAuthData.code, UrlOAuthData.state, oAuthData)
       .then((memberTokens) => {
         wixClient.auth.setTokens(memberTokens);
         setState("authenticated");
       })
       .catch(() => setState("unauthenticated"))
-      .finally(() => setTimeout(() => router.replace("/"), 3000));
+      .finally(() => setTimeout(() => router.replace("/"), 4000));
   }, []);
 
   return (

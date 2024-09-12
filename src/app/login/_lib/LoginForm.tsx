@@ -5,6 +5,10 @@ import Link from "next/link";
 import FormRow from "../../../components/form/FormRow";
 import { FormMode } from "./login-types";
 import OAuthLoginButton from "./OAuthLoginButton";
+import useWixClient from "@/hooks/useWixClient";
+import { useRouter } from "next/navigation";
+import { updateRefreshToken } from "./updateRefreshToken";
+import { LoginState } from "@wix/sdk";
 
 const requiredField = { required: "This field is required" };
 
@@ -12,6 +16,7 @@ type LoginInputs = {
   username: string;
   email: string;
   password: string;
+  code: string;
 };
 
 const defaultFormMode: FormMode = {
@@ -23,8 +28,16 @@ const defaultFormMode: FormMode = {
   password: true,
 };
 
-function LoginForm({ formMode = defaultFormMode }: { formMode: FormMode }) {
+function LoginForm({
+  formMode = defaultFormMode,
+  stateToken,
+}: {
+  formMode: FormMode;
+  stateToken: string;
+}) {
   const { mode, formTitle, buttonTitle, username, email, password } = formMode;
+  const wixClient = useWixClient();
+  const router = useRouter();
 
   const {
     register,
@@ -33,8 +46,70 @@ function LoginForm({ formMode = defaultFormMode }: { formMode: FormMode }) {
     formState: { errors, isSubmitting, isSubmitted },
   } = useForm<LoginInputs>();
 
-  const onSubmit: SubmitHandler<LoginInputs> = function (data) {
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginInputs> = async function (formData) {
+    console.log(formData);
+
+    let response;
+    switch (mode) {
+      case "login":
+        response = await wixClient.auth
+          .login({
+            email: formData.email,
+            password: formData.password,
+          })
+          .catch((e) => console.log("my error", e));
+        break;
+
+      case "register":
+        response = await wixClient.auth.register({
+          email: formData.email,
+          password: formData.password,
+          profile: { nickname: formData.username },
+        });
+        break;
+
+      case "verification":
+        console.log("verification process...");
+        if (!formData.code || !stateToken) break;
+        response = await wixClient.auth.processVerification(
+          {
+            verificationCode: formData.code,
+          },
+          {
+            data: { stateToken },
+            loginState: LoginState.EMAIL_VERIFICATION_REQUIRED,
+          },
+        );
+        break;
+
+      default:
+        break;
+    }
+    console.log(response);
+
+    if (!response) return;
+
+    switch (response.loginState) {
+      case LoginState.EMAIL_VERIFICATION_REQUIRED:
+        response.loginState;
+        console.log("email verification");
+        router.push(`?f=verification&st=${response.data.stateToken}`);
+        break;
+      case LoginState.SUCCESS:
+        console.log("success");
+        const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
+          response.data.sessionToken,
+        );
+        wixClient.auth.setTokens(tokens);
+        updateRefreshToken(tokens.refreshToken);
+        router.replace("/");
+        break;
+      case LoginState.FAILURE:
+        console.log("failure");
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -72,6 +147,18 @@ function LoginForm({ formMode = defaultFormMode }: { formMode: FormMode }) {
             />
           </FormRow>
         )}
+        {mode === "verification" && (
+          <FormRow label="Code" error={errors["code"]} required>
+            <input
+              type="text"
+              id="code"
+              placeholder=""
+              {...register("code")}
+              className="rounded-md px-4 py-2 ring-2 ring-border"
+            />
+          </FormRow>
+        )}
+
         {mode === "login" && (
           <Link href="?f=reset" className="text-sm">
             Forgot password?{" "}

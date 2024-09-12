@@ -1,5 +1,7 @@
+export type Mode = "login" | "register" | "reset" | "verification";
+
 export type FormMode = {
-  mode: string;
+  mode: Mode;
   formTitle: string;
   buttonTitle: string;
   username: boolean;

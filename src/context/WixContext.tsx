@@ -2,6 +2,7 @@
 
 import { createClient, OAuthStrategy } from "@wix/sdk";
 import { products, collections } from "@wix/stores";
+import { members } from "@wix/members";
 import Cookies from "js-cookie";
 import { createContext, ReactNode } from "react";
 
@@ -13,6 +14,7 @@ function createWixClient() {
     modules: {
       products,
       collections,
+      members,
       //currentCart
     },
     auth: OAuthStrategy({
