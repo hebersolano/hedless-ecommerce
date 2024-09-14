@@ -45,39 +45,47 @@ function Trigger({
     MenuContext,
   ) as MenuContextT;
 
+  function onClick() {
+    setOpenMenuName((prev) => (prev === opens ? "" : opens));
+  }
+
   return cloneElement(children, {
-    onClick: () => setOpenMenuName((prev) => (prev === opens ? "" : opens)),
-    id: opens,
+    onClick,
+    id: opens + "-trigger",
   });
 }
 
 function Content({ children, name }: { children: ReactElement; name: string }) {
   const { openMenuName, onCloseMenu } = useContext(MenuContext) as MenuContextT;
-  const ref = useRef<HTMLDivElement>(null);
+  const refContent = useRef<HTMLDivElement>(null);
 
   useEffect(
     function () {
       function handleClickOutside(event: Event) {
-        const trigger = document.getElementById(openMenuName);
+        if (name !== openMenuName) return;
         const target = event.target as Node;
+        const trigger = document.getElementById(name + "-trigger");
+        if (refContent.current?.contains(target) || trigger?.contains(target))
+          return;
 
-        if (!ref.current?.contains(target) && !trigger?.contains(target)) {
-          onCloseMenu?.();
-        }
+        onCloseMenu?.();
       }
-      document.addEventListener("mouseup", handleClickOutside, true);
+      document.addEventListener("click", handleClickOutside, true);
 
       return () => {
-        document.removeEventListener("mouseup", handleClickOutside, true);
+        console.log("removing outside event");
+        document.removeEventListener("click", handleClickOutside, true);
       };
     },
-    [onCloseMenu, openMenuName],
+    [name, openMenuName],
   );
 
-  if (name !== openMenuName) return null;
+  if (name !== openMenuName) return <div ref={refContent} id={name}></div>;
 
   return (
-    <div ref={ref}>{cloneElement(children, { onClose: onCloseMenu })}</div>
+    <div ref={refContent} id={name}>
+      {children}
+    </div>
   );
 }
 
