@@ -17,6 +17,7 @@ type LoginInputs = {
   username: string;
   email: string;
   password: string;
+  validatePassword: string;
   code: string;
 };
 
@@ -43,7 +44,8 @@ function LoginForm({
   const {
     register,
     handleSubmit,
-    reset,
+    getValues,
+    setError,
     formState: { errors, isSubmitting, isSubmitted },
   } = useForm<LoginInputs>();
 
@@ -102,6 +104,11 @@ function LoginForm({
         break;
 
       case LoginState.FAILURE:
+        if (response.errorCode === "invalidEmail")
+          setError("email", { type: "manual", message: "Invalid email" });
+        console.log("failure");
+        if (response.errorCode === "invalidPassword")
+          setError("password", { type: "manual", message: "Invalid password" });
         console.log("failure");
         break;
       default:
@@ -135,14 +142,39 @@ function LoginForm({
           </FormRow>
         )}
         {password && (
-          <FormRow label="Password" error={errors["password"]} required>
-            <input
-              type="password"
-              id="password"
-              {...register("password")}
-              className="rounded-md px-4 py-2 ring-2 ring-border"
-            />
-          </FormRow>
+          <>
+            <FormRow label="Password" error={errors["password"]} required>
+              <input
+                type="password"
+                id="password"
+                {...register("password")}
+                className="rounded-md px-4 py-2 ring-2 ring-border"
+              />
+            </FormRow>
+            {mode === "register" && (
+              <FormRow
+                label="Insert Password"
+                error={errors["validatePassword"]}
+                required
+              >
+                <input
+                  type="password"
+                  id="validatePassword"
+                  {...register("validatePassword", {
+                    required: "Conform password is require",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                    validate: (value, formValues) =>
+                      value === formValues.password || "Passwords must match",
+                  })}
+                  placeholder=""
+                  className="rounded-md px-4 py-2 ring-2 ring-border"
+                />
+              </FormRow>
+            )}
+          </>
         )}
         {mode === "verification" && (
           <FormRow label="Code" error={errors["code"]} required>
@@ -164,6 +196,7 @@ function LoginForm({
         )}
         <button
           type="submit"
+          disabled={isSubmitting}
           className="rounded-md bg-primary px-4 py-2 text-primary-foreground disabled:cursor-not-allowed disabled:bg-primary/30"
         >
           {buttonTitle}
@@ -190,7 +223,9 @@ function LoginForm({
           </Link>
         )}
 
-        {mode === "login" || mode === "register" ? <OAuthLoginButton /> : null}
+        {mode === "login" || mode === "register" ? (
+          <OAuthLoginButton disable={isSubmitting} />
+        ) : null}
       </form>
     </>
   );

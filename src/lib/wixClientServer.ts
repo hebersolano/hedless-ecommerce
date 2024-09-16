@@ -32,24 +32,16 @@ function getSessionTokens(): Tokens | undefined {
 }
 
 export function getWixClient() {
-  // if (global.wixClient) {
-  //   console.log("using cache wix client");
-  //   const isLogged = global.wixClient.auth.loggedIn();
-  //   console.log("server log", isLogged);
-  //   return global.wixClient;
-  // }
-  // global.wixClient = wixClient;
-  const wixClient = wixClientServer();
-  const isLogged = wixClient.auth.loggedIn();
-  console.log("server log", isLogged);
-  return wixClient;
-}
-
-export function wixClientServer() {
-  console.log("creating wix client");
+  if (!global.wixClient) global.wixClient = wixClientServer();
 
   let userTokens = getSessionTokens();
+  if (!userTokens) return global.wixClient;
 
+  return wixClientServer(userTokens);
+}
+
+export function wixClientServer(userTokens?: Tokens) {
+  console.log("creating wix client");
   const wixClient = createClient({
     modules: {
       products,

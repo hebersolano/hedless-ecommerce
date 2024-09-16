@@ -6,7 +6,7 @@ import { getOAuthURL } from "./helpers";
 import type { MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
 
-function OAuthLoginButton() {
+function OAuthLoginButton({ disable }: { disable?: boolean }) {
   const wixClient = useWixClient();
   const router = useRouter();
 
@@ -26,6 +26,7 @@ function OAuthLoginButton() {
       <button
         type="button"
         onClick={handleOAuthRedirect}
+        disabled={disable}
         className="flex items-center justify-center rounded-lg border-2 border-primary px-5 py-3 text-sm hover:bg-gray-900 hover:text-white"
       >
         <FaGoogle className="mr-2 sm:mr-0 md:mr-2" />
