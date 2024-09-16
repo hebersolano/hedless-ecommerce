@@ -1,10 +1,12 @@
 "use client";
 
-import useWixClient from "@/hooks/useWixClient";
 import { useRouter } from "next/navigation";
-import { getOAuthData } from "../_lib/helpers";
 import { useEffect, useState } from "react";
+
 import { PropagateLoader } from "react-spinners";
+import useWixClient from "@/hooks/useWixClient";
+import { setSessionTokens } from "@/lib/helpers/setSessionTokens";
+import { getOAuthData } from "../_lib/helpers";
 
 function CallbackPage() {
   const [state, setState] = useState("authenticating");
@@ -19,6 +21,7 @@ function CallbackPage() {
       .getMemberTokens(UrlOAuthData.code, UrlOAuthData.state, oAuthData)
       .then((memberTokens) => {
         wixClient.auth.setTokens(memberTokens);
+        setSessionTokens(memberTokens);
         setState("authenticated");
       })
       .catch(() => setState("unauthenticated"))

@@ -7,8 +7,9 @@ import { FormMode } from "./login-types";
 import OAuthLoginButton from "./OAuthLoginButton";
 import useWixClient from "@/hooks/useWixClient";
 import { useRouter } from "next/navigation";
-import { setRefreshToken } from "./setRefreshToken";
 import { LoginState, StateMachine } from "@wix/sdk";
+import Cookies from "js-cookie";
+import { setSessionTokens } from "@/lib/helpers/setSessionTokens";
 
 const requiredField = { required: "This field is required" };
 
@@ -68,7 +69,6 @@ function LoginForm({
         break;
 
       case "verification":
-        console.log("verification process...");
         if (!formData.code || !stateToken) break;
         response = await wixClient.auth.processVerification(
           {
@@ -88,7 +88,6 @@ function LoginForm({
     switch (response.loginState) {
       case LoginState.EMAIL_VERIFICATION_REQUIRED:
         response.loginState;
-        console.log("email verification");
         router.push(`?f=verification&st=${response.data.stateToken}`);
         break;
 
@@ -97,8 +96,8 @@ function LoginForm({
         const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
           response.data.sessionToken,
         );
+        setSessionTokens(tokens);
         wixClient.auth.setTokens(tokens);
-        setRefreshToken(tokens.refreshToken.value);
         router.replace("/");
         break;
 

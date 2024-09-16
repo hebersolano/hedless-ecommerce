@@ -1,34 +1,31 @@
 "use client";
 
-import { createClient, OAuthStrategy, TokenRole } from "@wix/sdk";
+import { createClient, OAuthStrategy, TokenRole, Tokens } from "@wix/sdk";
 import { products, collections } from "@wix/stores";
 import { members } from "@wix/members";
 import Cookies from "js-cookie";
 import { createContext, ReactNode } from "react";
 
+function getSessionTokens(): Tokens | undefined {
+  const userTokens = Cookies.get("session");
+
+  if (!userTokens) return undefined;
+  return JSON.parse(userTokens) as Tokens;
+}
+
 function createWixClient() {
   console.log("creating client, wix client");
-  const refreshToken = Cookies.get("refreshToken") || "";
+  let userTokens = getSessionTokens();
 
   const wixClient = createClient({
     modules: {
       products,
       collections,
       members,
-      //currentCart
     },
     auth: OAuthStrategy({
       clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,
-      tokens: {
-        accessToken: {
-          value: "",
-          expiresAt: 0,
-        },
-        refreshToken: {
-          value: refreshToken,
-          role: TokenRole.MEMBER,
-        },
-      },
+      tokens: userTokens,
     }),
   });
 

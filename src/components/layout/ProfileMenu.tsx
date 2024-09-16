@@ -1,21 +1,20 @@
 "use client";
-import useWixClient from "@/hooks/useWixClient";
-import Cookies from "js-cookie";
+
 import Link from "next/link";
-import { useEffect, useState } from "react";
+
+import useWixClient from "@/hooks/useWixClient";
+import deleteSessionTokens from "@/lib/helpers/deleteSessionTokens";
 
 export function ProfileMenu() {
-  const [href, setHref] = useState("");
   const wixClient = useWixClient();
   const isLogged = wixClient.auth.loggedIn();
-
-  useEffect(function () {
-    setHref(window.location.href);
-  }, []);
+  const tokens = wixClient.auth.getTokens();
+  console.log(tokens);
 
   async function handleLogout() {
     console.log("logout click");
-    const res = await wixClient.auth.logout(href);
+    await deleteSessionTokens();
+    const res = await wixClient.auth.logout(window.location.href);
     window.location.href = res.logoutUrl;
   }
 
