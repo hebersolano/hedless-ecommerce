@@ -1,25 +1,17 @@
 "use client";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
-
-import FormRow from "../../../components/form/FormRow";
-import { FormMode } from "./login-types";
-import OAuthLoginButton from "./OAuthLoginButton";
-import useWixClient from "@/hooks/useWixClient";
+import { FormMode, LoginInputs } from "./login-types";
 import { useRouter } from "next/navigation";
 import { LoginState, StateMachine } from "@wix/sdk";
-import Cookies from "js-cookie";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import FormRow from "../../../components/form/FormRow";
+import OAuthLoginButton from "./OAuthLoginButton";
+import useWixClient from "@/hooks/useWixClient";
 import { setSessionTokens } from "@/lib/helpers/setSessionTokens";
-
-const requiredField = { required: "This field is required" };
-
-type LoginInputs = {
-  username: string;
-  email: string;
-  password: string;
-  validatePassword: string;
-  code: string;
-};
+import { LoginFormSchemas } from "@/lib/schemas";
+import { handleSubmitData, handleSubmitResponse } from "./helpers";
 
 const defaultFormMode: FormMode = {
   mode: "login",
@@ -44,88 +36,40 @@ function LoginForm({
   const {
     register,
     handleSubmit,
-    getValues,
     setError,
     formState: { errors, isSubmitting, isSubmitted },
-  } = useForm<LoginInputs>();
+  } = useForm<LoginInputs>({ resolver: zodResolver(LoginFormSchemas[mode]) });
 
   const onSubmit: SubmitHandler<LoginInputs> = async function (formData) {
     console.log(formData);
 
-    let response: StateMachine | undefined = undefined;
+    const response = await handleSubmitData({
+      mode,
+      wixClient,
+      formData,
+      stateToken,
+    });
 
-    switch (mode) {
-      case "login":
-        response = await wixClient.auth.login({
-          email: formData.email,
-          password: formData.password,
-        });
-        break;
+    handleSubmitResponse({ response, wixClient, router, setError });
+  };
 
-      case "register":
-        response = await wixClient.auth.register({
-          email: formData.email,
-          password: formData.password,
-          profile: { nickname: formData.username },
-        });
-        break;
-
-      case "verification":
-        if (!formData.code || !stateToken) break;
-        response = await wixClient.auth.processVerification(
-          {
-            verificationCode: formData.code,
-          },
-          {
-            data: { stateToken },
-            loginState: LoginState.EMAIL_VERIFICATION_REQUIRED,
-          },
-        );
-        break;
-    }
-    console.log(response);
-
-    if (!response) return;
-
-    switch (response.loginState) {
-      case LoginState.EMAIL_VERIFICATION_REQUIRED:
-        response.loginState;
-        router.push(`?f=verification&st=${response.data.stateToken}`);
-        break;
-
-      case LoginState.SUCCESS:
-        console.log("success");
-        const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
-          response.data.sessionToken,
-        );
-        setSessionTokens(tokens);
-        wixClient.auth.setTokens(tokens);
-        router.replace("/");
-        break;
-
-      case LoginState.FAILURE:
-        if (response.errorCode === "invalidEmail")
-          setError("email", { type: "manual", message: "Invalid email" });
-        console.log("failure");
-        if (response.errorCode === "invalidPassword")
-          setError("password", { type: "manual", message: "Invalid password" });
-        console.log("failure");
-        break;
-      default:
-        break;
-    }
+  const onError: SubmitErrorHandler<LoginInputs> = (e) => {
+    console.log(e);
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        className="flex flex-col gap-6"
+      >
         <h1 className="text-2xl font-semibold">{formTitle}</h1>
         {username && (
           <FormRow label="Username" error={errors["username"]} required>
             <input
               type="text"
               id="username"
-              {...register("username", requiredField)}
+              {...register("username")}
               placeholder="john"
             />
           </FormRow>
@@ -160,15 +104,7 @@ function LoginForm({
                 <input
                   type="password"
                   id="validatePassword"
-                  {...register("validatePassword", {
-                    required: "Conform password is require",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 characters",
-                    },
-                    validate: (value, formValues) =>
-                      value === formValues.password || "Passwords must match",
-                  })}
+                  {...register("validatePassword")}
                   placeholder=""
                   className="rounded-md px-4 py-2 ring-2 ring-border"
                 />

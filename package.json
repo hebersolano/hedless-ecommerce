@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@types/js-cookie": "^3.0.6",
     "@wix/members": "^1.0.100",
     "@wix/sdk": "^1.12.12",
@@ -22,7 +23,8 @@
     "react-icons": "^5.3.0",
     "react-spinners": "^0.14.1",
     "sanitize-html": "^2.13.0",
-    "tailwind-merge": "^2.5.2"
+    "tailwind-merge": "^2.5.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "20.12.7",

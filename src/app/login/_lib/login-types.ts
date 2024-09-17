@@ -8,3 +8,11 @@ export type FormMode = {
   email: boolean;
   password: boolean;
 };
+
+export type LoginInputs = {
+  username: string;
+  email: string;
+  password: string;
+  validatePassword: string;
+  code: string;
+};
