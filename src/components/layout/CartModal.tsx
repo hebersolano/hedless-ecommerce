@@ -1,7 +1,20 @@
+"use client";
+import useWixClient from "@/hooks/useWixClient";
 import Image from "next/image";
+import { useEffect } from "react";
 
 function CartModal() {
+  const wixClient = useWixClient();
   const cartItems = false;
+
+  useEffect(
+    function () {
+      wixClient.currentCart
+        .getCurrentCart()
+        .then((res) => console.log("current cart", res));
+    },
+    [wixClient.currentCart],
+  );
 
   return (
     <div className="absolute right-0 top-12 z-20 flex w-max flex-col gap-6 rounded-md bg-card p-4 shadow-modal">

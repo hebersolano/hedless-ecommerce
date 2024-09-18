@@ -42,7 +42,7 @@ function SingleProductInfo({
       <div className="bg h-[2px] bg-secondary" />
 
       {isProductOptions && <CustomizeProducts />}
-      <Add />
+      <Add productId={product._id!} />
     </>
   );
 }

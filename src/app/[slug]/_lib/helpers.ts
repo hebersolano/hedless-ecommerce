@@ -42,7 +42,8 @@ export function getSelectedVariant(
   colorOptions: products.Choice[] | undefined,
 ): selectedVariant {
   // if there are not variants
-  if (variants.length === 1) return { ...variants[0], media: undefined };
+  if (variants.length === 1)
+    return { ...variants[0], media: undefined, hasVariants: false };
 
   const optionEntries = Object.entries(selectedOptions);
   console.log(optionEntries);
@@ -64,7 +65,7 @@ export function getSelectedVariant(
     }
   }
 
-  return { ...selectedVariant, media };
+  return { ...selectedVariant, media, hasVariants: true };
 }
 
 export function getUserProductOptions(

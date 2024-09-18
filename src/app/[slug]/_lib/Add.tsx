@@ -3,11 +3,17 @@
 import { useEffect, useState } from "react";
 import useSingleProduct from "./useSingleProduct";
 import { getVariantStock, isVariantInStock } from "./helpers";
+import useWixClient from "@/hooks/useWixClient";
 
-function Add() {
-  const [quantity, setQuantity] = useState(1);
+type AddProps = {
+  productId: string;
+};
+
+function Add({ productId }: AddProps) {
+  const wixClient = useWixClient();
   const { selectedVariant, setSelectedOptions, selectedOptions } =
     useSingleProduct();
+  const [quantity, setQuantity] = useState(1);
 
   const { inStock, trackStock, stock } = getVariantStock(selectedVariant);
   console.log(trackStock, stock);
@@ -32,8 +38,21 @@ function Add() {
     });
   }
 
-  function addButtonHandler(quantity: number) {
-    setSelectedOptions((prev) => ({ ...prev, quantity }));
+  async function addButtonHandler(quantity: number) {
+    const response = await wixClient.currentCart.addToCurrentCart({
+      lineItems: [
+        {
+          catalogReference: {
+            appId: process.env.NEXT_PUBLIC_APP_ID!,
+            catalogItemId: productId,
+            ...(selectedVariant.hasVariants && {
+              options: { variantId: selectedVariant._id! },
+            }),
+          },
+          quantity,
+        },
+      ],
+    });
   }
 
   return (

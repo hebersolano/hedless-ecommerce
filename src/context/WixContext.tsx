@@ -3,31 +3,42 @@
 import { createClient, OAuthStrategy, TokenRole, Tokens } from "@wix/sdk";
 import { products, collections } from "@wix/stores";
 import { members } from "@wix/members";
+import { currentCart } from "@wix/ecom";
+
 import Cookies from "js-cookie";
 import { createContext, ReactNode } from "react";
+import { setSessionTokens } from "@/lib/helpers/setSessionTokens";
 
 function getSessionTokens(): Tokens | undefined {
-  const userTokens = Cookies.get("session");
+  const sessionTokens = Cookies.get("session");
 
-  if (!userTokens) return undefined;
-  return JSON.parse(userTokens) as Tokens;
+  if (!sessionTokens) return undefined;
+  return JSON.parse(sessionTokens) as Tokens;
 }
 
 function createWixClient() {
   console.log("creating client, wix client");
-  let userTokens = getSessionTokens();
+  let sessionTokens = getSessionTokens();
 
   const wixClient = createClient({
     modules: {
       products,
       collections,
+      currentCart,
       members,
     },
     auth: OAuthStrategy({
       clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,
-      tokens: userTokens,
+      // tokens: sessionTokens,
     }),
   });
+
+  // add visitor tokens
+  if (!sessionTokens)
+    wixClient.auth.generateVisitorTokens().then((tokes) => {
+      setSessionTokens(tokes);
+      wixClient.auth.setTokens(tokes);
+    });
 
   return wixClient;
 }

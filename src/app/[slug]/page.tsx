@@ -14,8 +14,9 @@ async function SinglePage({ params }: { params: { slug: string } }) {
   const isProductOptions = hasProductOptions(product);
   const defaultOptions = getDefaultProductOptions(isProductOptions, product);
 
-  console.log(product);
+  // console.log(product);
   // console.log(isProductOptions);
+  console.log("default options", defaultOptions);
   return (
     <div className="relative flex flex-col gap-16 px-4 md:px-8 lg:flex-row lg:px-16 xl:px-32 2xl:px-64">
       <SingleProductProvider product={product} defaultOptions={defaultOptions}>

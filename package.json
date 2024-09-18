@@ -11,6 +11,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "@types/js-cookie": "^3.0.6",
+    "@wix/ecom": "^1.0.737",
     "@wix/members": "^1.0.100",
     "@wix/sdk": "^1.12.12",
     "@wix/stores": "^1.0.194",
