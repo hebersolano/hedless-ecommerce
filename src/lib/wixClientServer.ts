@@ -54,5 +54,7 @@ export function wixClientServer(userTokens?: Tokens) {
     }),
   });
 
+  console.log("user server logged:", wixClient.auth.loggedIn());
+
   return wixClient;
 }

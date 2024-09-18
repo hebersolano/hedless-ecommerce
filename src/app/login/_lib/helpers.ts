@@ -27,7 +27,6 @@ type SubmitData = {
   mode: Mode;
   wixClient: WixClientT;
   formData: LoginInputs;
-  stateToken: string;
 };
 
 type Response = StateMachine | undefined;
@@ -36,7 +35,6 @@ export async function handleSubmitData({
   mode,
   wixClient,
   formData,
-  stateToken,
 }: SubmitData) {
   let response: Response = undefined;
 
@@ -57,7 +55,9 @@ export async function handleSubmitData({
       break;
 
     case "verification":
+      const stateToken = sessionStorage.getItem("stateToken");
       if (!formData.code || !stateToken) break;
+
       response = await wixClient.auth.processVerification(
         {
           verificationCode: formData.code,
@@ -67,6 +67,7 @@ export async function handleSubmitData({
           loginState: LoginState.EMAIL_VERIFICATION_REQUIRED,
         },
       );
+      sessionStorage.removeItem("stateToken");
       break;
   }
 
@@ -90,27 +91,45 @@ export async function handleSubmitResponse({
 
   switch (response.loginState) {
     case LoginState.EMAIL_VERIFICATION_REQUIRED:
-      response.loginState;
-      router.push(`?f=verification&st=${response.data.stateToken}`);
+      sessionStorage.setItem("stateToken", response.data.stateToken);
+      router.push("?f=verification");
       break;
 
     case LoginState.SUCCESS:
-      console.log("success");
       const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
         response.data.sessionToken,
       );
-      setSessionTokens(tokens);
       wixClient.auth.setTokens(tokens);
+      setSessionTokens(tokens);
       router.replace("/");
       break;
 
-    case LoginState.FAILURE:
-      if (response.errorCode === "invalidEmail")
-        setError("email", { type: "manual", message: "Invalid email" });
-      console.log("failure");
-      if (response.errorCode === "invalidPassword")
-        setError("password", { type: "manual", message: "Invalid password" });
-      console.log("failure");
+    case LoginState.FAILURE: {
+      console.log("response failure", response.errorCode);
+
+      switch (response.errorCode) {
+        case "invalidEmail":
+        case "emailAlreadyExists":
+        case "invalidPassword":
+          setError("email", {
+            type: "manual",
+            message: "Invalid email or password",
+          });
+          break;
+
+        case "resetPassword":
+          setError("password", {
+            type: "manual",
+            message: "You need to reset your password",
+          });
+          setTimeout(() => router.push("?f=reset"), 3000);
+          break;
+
+        default:
+          console.log("unhandled Failure", response);
+          break;
+      }
       break;
+    } //end of failure case handler
   }
 }

@@ -16,3 +16,50 @@ export type LoginInputs = {
   validatePassword: string;
   code: string;
 };
+
+export const formModes = new Map<Mode, FormMode>([
+  [
+    "login",
+    {
+      mode: "login",
+      formTitle: "Login",
+      buttonTitle: "Login",
+      username: false,
+      email: true,
+      password: true,
+    },
+  ],
+  [
+    "register",
+    {
+      mode: "register",
+      formTitle: "Register",
+      buttonTitle: "Sign up",
+      username: true,
+      email: true,
+      password: true,
+    },
+  ],
+  [
+    "reset",
+    {
+      mode: "reset",
+      formTitle: "Reset Password",
+      buttonTitle: "Get Code",
+      username: false,
+      email: true,
+      password: false,
+    },
+  ],
+  [
+    "verification",
+    {
+      mode: "verification",
+      formTitle: "Verify email",
+      buttonTitle: "Verify",
+      username: false,
+      email: false,
+      password: false,
+    },
+  ],
+]);

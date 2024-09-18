@@ -1,68 +1,49 @@
 "use client";
-import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
-import Link from "next/link";
-import { FormMode, LoginInputs } from "./login-types";
-import { useRouter } from "next/navigation";
-import { LoginState, StateMachine } from "@wix/sdk";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FormMode, LoginInputs } from "./login-types";
 
 import FormRow from "../../../components/form/FormRow";
 import OAuthLoginButton from "./OAuthLoginButton";
 import useWixClient from "@/hooks/useWixClient";
-import { setSessionTokens } from "@/lib/helpers/setSessionTokens";
 import { LoginFormSchemas } from "@/lib/schemas";
 import { handleSubmitData, handleSubmitResponse } from "./helpers";
+import { useEffect } from "react";
 
-const defaultFormMode: FormMode = {
-  mode: "login",
-  formTitle: "Login",
-  buttonTitle: "Login",
-  username: true,
-  email: false,
-  password: true,
-};
-
-function LoginForm({
-  formMode = defaultFormMode,
-  stateToken,
-}: {
-  formMode: FormMode;
-  stateToken: string;
-}) {
+function LoginForm({ formMode }: { formMode: FormMode }) {
   const { mode, formTitle, buttonTitle, username, email, password } = formMode;
   const wixClient = useWixClient();
   const router = useRouter();
-
   const {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting, isSubmitted },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm<LoginInputs>({ resolver: zodResolver(LoginFormSchemas[mode]) });
 
   const onSubmit: SubmitHandler<LoginInputs> = async function (formData) {
     console.log(formData);
 
-    const response = await handleSubmitData({
+    let response = await handleSubmitData({
       mode,
       wixClient,
       formData,
-      stateToken,
     });
 
-    handleSubmitResponse({ response, wixClient, router, setError });
+    await handleSubmitResponse({ response, wixClient, router, setError });
   };
 
-  const onError: SubmitErrorHandler<LoginInputs> = (e) => {
-    console.log(e);
-  };
+  function resetForm() {
+    reset();
+  }
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit(onSubmit, onError)}
-        className="flex flex-col gap-6"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <h1 className="text-2xl font-semibold">{formTitle}</h1>
         {username && (
           <FormRow label="Username" error={errors["username"]} required>
@@ -71,6 +52,7 @@ function LoginForm({
               id="username"
               {...register("username")}
               placeholder="john"
+              disabled={isSubmitting}
             />
           </FormRow>
         )}
@@ -82,6 +64,7 @@ function LoginForm({
               {...register("email")}
               placeholder="john@email.com"
               className="rounded-md px-4 py-2 ring-2 ring-border"
+              disabled={isSubmitting}
             />
           </FormRow>
         )}
@@ -93,6 +76,8 @@ function LoginForm({
                 id="password"
                 {...register("password")}
                 className="rounded-md px-4 py-2 ring-2 ring-border"
+                disabled={isSubmitting}
+                placeholder=""
               />
             </FormRow>
             {mode === "register" && (
@@ -107,6 +92,7 @@ function LoginForm({
                   {...register("validatePassword")}
                   placeholder=""
                   className="rounded-md px-4 py-2 ring-2 ring-border"
+                  disabled={isSubmitting}
                 />
               </FormRow>
             )}
@@ -120,12 +106,13 @@ function LoginForm({
               placeholder=""
               {...register("code")}
               className="rounded-md px-4 py-2 ring-2 ring-border"
+              disabled={isSubmitting}
             />
           </FormRow>
         )}
 
         {mode === "login" && (
-          <Link href="?f=reset" className="text-sm">
+          <Link href="?f=reset" onClick={resetForm} className="text-sm">
             Forgot password?{" "}
             <span className="text-primary underline">Reset</span>
           </Link>
@@ -139,19 +126,19 @@ function LoginForm({
         </button>
 
         {mode === "register" && (
-          <Link href="?f=login" className="text-sm">
+          <Link href="?f=login" onClick={resetForm} className="text-sm">
             Have an account?{" "}
             <span className="tracking-wider text-primary underline">Login</span>
           </Link>
         )}
         {mode === "reset" && (
-          <Link href="?f=login" className="text-sm">
+          <Link href="?f=login" onClick={resetForm} className="text-sm">
             Go back to{" "}
             <span className="tracking-wider text-primary underline">Login</span>
           </Link>
         )}
         {mode === "login" && (
-          <Link href="?f=register" className="text-sm">
+          <Link href="?f=register" onClick={resetForm} className="text-sm">
             Don&apos;t have an account?{" "}
             <span className="tracking-wider text-primary underline">
               Register
