@@ -61,8 +61,8 @@ function Content({ children, name }: { children: ReactElement; name: string }) {
 
   useEffect(
     function () {
+      if (name !== openMenuName) return;
       function handleClickOutside(event: Event) {
-        if (name !== openMenuName) return;
         const target = event.target as Node;
         const trigger = document.getElementById(name + "-trigger");
         if (refContent.current?.contains(target) || trigger?.contains(target))

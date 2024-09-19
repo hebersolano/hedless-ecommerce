@@ -12,10 +12,21 @@ import MenuBox from "../MenuWindows";
 import { ThemeProvider } from "next-themes";
 import dynamic from "next/dynamic";
 import { ProfileMenu } from "./ProfileMenu";
+import { useCartStore } from "@/hooks/useCartStores";
+import { useEffect } from "react";
+import useWixClient from "@/hooks/useWixClient";
 
 const iconStyle = { height: 23, width: 23 };
 
 function NavbarIcons() {
+  const wixClient = useWixClient();
+  const { counter, getCart } = useCartStore();
+
+  useEffect(function () {
+    console.log("navicons get cart");
+    getCart(wixClient);
+  }, []);
+
   return (
     <div className="relative flex flex-none items-center">
       <ThemeProvider attribute="class" enableSystem={false}>
@@ -46,7 +57,7 @@ function NavbarIcons() {
               />
 
               <div className="pointer-events-none absolute -top-4 left-3 flex h-6 w-6 items-center justify-center rounded-full bg-lama text-sm leading-none">
-                <span className="">3</span>
+                <span className="">{counter}</span>
               </div>
             </div>
           </MenuBox.Trigger>
