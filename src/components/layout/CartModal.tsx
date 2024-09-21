@@ -3,6 +3,10 @@ import { useCartStore } from "@/hooks/useCartStores";
 import useWixClient from "@/hooks/useWixClient";
 import CartItem from "./CartItem";
 import CartItemSkeleton from "./CartItemSkeleton";
+import { currentCart } from "@wix/ecom";
+
+const LOCAL_URL = process.env.NEXT_PUBLIC_URI || window.location.origin;
+console.log(window.location.origin, "origin");
 
 function CartModal() {
   const wixClient = useWixClient();
@@ -10,7 +14,30 @@ function CartModal() {
   const cartItems = cart.lineItems || [];
 
   console.log(cart);
-  function handleCheckout() {}
+
+  async function handleCheckout() {
+    try {
+      const { checkoutId } =
+        await wixClient.currentCart.createCheckoutFromCurrentCart({
+          channelType: currentCart.ChannelType.WEB,
+        });
+
+      const { redirectSession } =
+        await wixClient.redirects.createRedirectSession({
+          ecomCheckout: { checkoutId },
+          callbacks: {
+            postFlowUrl: LOCAL_URL + "/",
+            thankYouPageUrl: LOCAL_URL + "/success",
+          },
+        });
+
+      if (redirectSession?.fullUrl) {
+        window.location.href = redirectSession.fullUrl;
+      }
+    } catch (error) {
+      console.error("checkout error", error);
+    }
+  }
 
   return (
     <div className="absolute right-0 top-12 z-20 flex w-max flex-col gap-4 rounded-md bg-card p-4 shadow-modal">
@@ -53,6 +80,7 @@ function CartModal() {
                 View Cart
               </button>
               <button
+                onClick={handleCheckout}
                 disabled={isLoadingCart}
                 className="rounded-md bg-black px-4 py-3 text-white"
               >

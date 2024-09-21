@@ -20,6 +20,9 @@ importers:
       '@wix/members':
         specifier: ^1.0.100
         version: 1.0.100
+      '@wix/redirects':
+        specifier: ^1.0.55
+        version: 1.0.55
       '@wix/sdk':
         specifier: ^1.12.12
         version: 1.12.12
@@ -483,11 +486,11 @@ packages:
   '@wix/motion-edm-autogen-types@1.0.35':
     resolution: {integrity: sha512-XqRkmvKojVoUdyb/Prdqlb0wwqlXqbpfFC18CqzeVgCBovO8iWbQjC+EyX2KT8DVKz9KB1QDR9qCP5ffBJgbFA==}
 
-  '@wix/redirects@1.0.52':
-    resolution: {integrity: sha512-UB01vY1mDBYVHkuO2LgGB5u4uHmmGEwRo2PvOFlhBIf0sk3y5LimsGH/MYGSxiZNzXokY4v1Qdx19Ak9EVg6eA==}
+  '@wix/redirects@1.0.55':
+    resolution: {integrity: sha512-xiQFn7QdoBuaHzAinS2xYVMQLV7CVznpJt7JAeZi+KlOtDxFNDww9NIOVZV+KAAZtRM7/jy9x/2rmozQ85p6bw==}
 
-  '@wix/redirects_redirects@1.0.22':
-    resolution: {integrity: sha512-fNK3cSxOkXY4H6q18xbcFLEjCJeLStWJB6Ceq/YRMESqSrSKofAmnSQ02jxfww4fR4GZq8RdJty1id7evd6v2A==}
+  '@wix/redirects_redirects@1.0.25':
+    resolution: {integrity: sha512-/ns90KcjKnpMRAFxAy6NM1OYYBukh8jOqZGnAvfQ6ijSNho6V6Oqq6iyqCONGTwXKVxg2VKjXzG/QyxV+CVCYQ==}
 
   '@wix/sdk-context@0.0.1':
     resolution: {integrity: sha512-ziSzrceUC0KFn4IJIVBn1cXXKrZ49ZKG5tQ6fl+TpontyUw5p/Z4VofFUUsnqNl9JYCpYNTzIXpzwok93Vrl8A==}
@@ -2692,11 +2695,11 @@ snapshots:
 
   '@wix/motion-edm-autogen-types@1.0.35': {}
 
-  '@wix/redirects@1.0.52':
+  '@wix/redirects@1.0.55':
     dependencies:
-      '@wix/redirects_redirects': 1.0.22
+      '@wix/redirects_redirects': 1.0.25
 
-  '@wix/redirects_redirects@1.0.22':
+  '@wix/redirects_redirects@1.0.25':
     dependencies:
       '@wix/metro-runtime': 1.1792.0
       '@wix/motion-edm-autogen-query-wrapper': 1.0.100
@@ -2721,7 +2724,7 @@ snapshots:
       '@babel/runtime': 7.25.4
       '@wix/identity': 1.0.82
       '@wix/image-kit': 1.82.0
-      '@wix/redirects': 1.0.52
+      '@wix/redirects': 1.0.55
       '@wix/sdk-context': 0.0.1
       '@wix/sdk-runtime': 0.3.16
       '@wix/sdk-types': 1.9.3
