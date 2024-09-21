@@ -3,7 +3,7 @@
 import { createClient, OAuthStrategy, Tokens } from "@wix/sdk";
 import { products, collections } from "@wix/stores";
 import { members } from "@wix/members";
-import { currentCart } from "@wix/ecom";
+import { currentCart, orders } from "@wix/ecom";
 import { redirects } from "@wix/redirects";
 
 import Cookies from "js-cookie";
@@ -28,6 +28,7 @@ function createWixClient() {
       currentCart,
       members,
       redirects,
+      orders,
     },
     auth: OAuthStrategy({
       clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,

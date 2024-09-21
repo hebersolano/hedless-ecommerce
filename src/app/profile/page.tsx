@@ -1,18 +1,14 @@
-"use client";
-
-import useWixClient from "@/hooks/useWixClient";
-import Cookies from "js-cookie";
+import UserProfile from "./_lib/UserProfile";
 
 function ProfilePage() {
-  const wixClient = useWixClient();
-  const isLogged = wixClient.auth.loggedIn();
-  // wixClient.members
-  //   .getCurrentMember()
-  //   .then((res) => console.log("member", res));
-  console.log("client log", isLogged);
-  console.log(Cookies.get("session"));
-
-  return <div>ProfilePage</div>;
+  return (
+    <div className="flex flex-col gap-24 px-4 md:h-[calc(100vh-180px)] md:flex-row md:px-8 lg:px-16 xl:px-32 2xl:px-64">
+      <div className="w-full md:w-1/2">
+        <UserProfile />
+      </div>
+      <div className="w-full md:w-1/2">Orders</div>
+    </div>
+  );
 }
 
 export default ProfilePage;

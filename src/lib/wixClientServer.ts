@@ -7,6 +7,7 @@ import {
 } from "@wix/sdk";
 import { products, collections } from "@wix/stores";
 import { members } from "@wix/members";
+import { orders } from "@wix/ecom";
 
 import { cookies } from "next/headers";
 
@@ -20,6 +21,8 @@ export type wixClientT = WixClient<
   {
     products: typeof products;
     collections: typeof collections;
+    members: typeof members;
+    orders: typeof orders;
   }
 >;
 
@@ -31,7 +34,7 @@ function getSessionTokens(): Tokens | undefined {
   return JSON.parse(userTokens.value) as Tokens;
 }
 
-export function getWixClient() {
+export function getWixClient(): wixClientT {
   if (!global.wixClient) global.wixClient = wixClientServer();
 
   let userTokens = getSessionTokens();
@@ -47,6 +50,7 @@ export function wixClientServer(userTokens?: Tokens) {
       products,
       collections,
       members,
+      orders,
     },
     auth: OAuthStrategy({
       clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,
