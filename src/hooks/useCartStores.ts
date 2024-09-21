@@ -8,7 +8,7 @@ export type CartStore = {
       amount: string;
     };
   };
-  isLoading: boolean;
+  isLoadingCart: boolean;
   counter: number;
   getCart: (wixClient: WixClientT) => void;
   addItem: (
@@ -22,22 +22,24 @@ export type CartStore = {
 
 export const useCartStore = create<CartStore>()((set) => ({
   cart: { lineItems: [] },
-  isLoading: true,
+  isLoadingCart: true,
   counter: 0,
+
   getCart: async (wixClient) => {
     try {
       const cart = await wixClient.currentCart.getCurrentCart();
       console.log("get cart", cart);
-      set({ cart, isLoading: false, counter: cart.lineItems.length });
+      set({ cart, isLoadingCart: false, counter: cart.lineItems.length });
     } catch (error) {
-      console.log("get cart error", error);
+      set((state) => ({ ...state, isLoadingCart: false }));
     }
   },
-  addItem: async (wixClient, productId, variantId, quantity) => {
-    set((state) => ({ ...state, isLoading: true }));
 
-    const res = await wixClient.currentCart
-      .addToCurrentCart({
+  addItem: async (wixClient, productId, variantId, quantity) => {
+    try {
+      set((state) => ({ ...state, isLoadingCart: true }));
+
+      const res = await wixClient.currentCart.addToCurrentCart({
         lineItems: [
           {
             catalogReference: {
@@ -50,31 +52,41 @@ export const useCartStore = create<CartStore>()((set) => ({
             quantity,
           },
         ],
-      })
-      .catch((e) => console.log("add to cart error:", e));
+      });
 
-    console.log("add cart res:", res);
-    if (!res || !res?.cart) return;
-    res.cart;
-    set({
-      cart: res.cart,
-      isLoading: false,
-      counter: res.cart.lineItems.length,
-    });
+      console.log("add cart res:", res);
+      if (!res || !res?.cart) throw new Error("Error adding item to cart");
+
+      set({
+        cart: res.cart,
+        isLoadingCart: false,
+        counter: res.cart.lineItems.length,
+      });
+    } catch (error) {
+      console.error("add item error", error);
+      set((state) => ({ ...state, isLoadingCart: false }));
+    }
   },
+
   removeItem: async (wixClient, itemId) => {
-    set((state) => ({ ...state, isLoading: true }));
+    try {
+      set((state) => ({ ...state, isLoadingCart: true }));
 
-    const res = await wixClient.currentCart
-      .removeLineItemsFromCurrentCart([itemId])
-      .catch((e) => console.log("error removing item", e));
+      const res = await wixClient.currentCart.removeLineItemsFromCurrentCart([
+        itemId,
+      ]);
 
-    console.log("res removing item", res);
-    if (!res || !res?.cart) return;
-    set({
-      cart: res.cart,
-      isLoading: false,
-      counter: res.cart.lineItems.length,
-    });
+      console.log("res removing item", res);
+      if (!res || !res?.cart) throw new Error("Error removing item from cart");
+
+      set({
+        cart: res.cart,
+        isLoadingCart: false,
+        counter: res.cart.lineItems.length,
+      });
+    } catch (error) {
+      console.error("error removing item", error);
+      set((state) => ({ ...state, isLoadingCart: false }));
+    }
   },
 }));

@@ -1,11 +1,11 @@
-import Add from "@/app/[slug]/_lib/Add";
-import CustomizeProducts from "@/components/CustomizeProducts";
 import ProductImages from "@/app/[slug]/_lib/ProductImages";
 import { SingleProductProvider } from "@/app/[slug]/_lib/SingleProductContext";
 import getProductBySlug from "@/lib/data-access/getProductBySlug";
 import { notFound } from "next/navigation";
 import SingleProductInfo from "./_lib/SingleProductInfo";
 import { getDefaultProductOptions, hasProductOptions } from "./_lib/helpers";
+import CustomizeProducts from "./_lib/CustomizeProducts";
+import Add from "./_lib/Add";
 
 async function SinglePage({ params }: { params: { slug: string } }) {
   const product = await getProductBySlug(params.slug);
@@ -27,10 +27,12 @@ async function SinglePage({ params }: { params: { slug: string } }) {
 
         {/* texts */}
         <div className="flex w-full flex-col gap-6 lg:w-1/2">
-          <SingleProductInfo
-            product={product}
-            isProductOptions={isProductOptions}
-          />
+          <SingleProductInfo product={product} />
+
+          <div className="bg h-[2px] bg-secondary" />
+
+          {isProductOptions && <CustomizeProducts />}
+          <Add productId={product._id!} />
 
           <div className="bg h-[2px] bg-secondary" />
 

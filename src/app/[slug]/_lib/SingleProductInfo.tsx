@@ -1,16 +1,9 @@
 "use client";
 
-import Add from "@/app/[slug]/_lib/Add";
 import { products } from "@wix/stores";
 import useSingleProduct from "./useSingleProduct";
-import CustomizeProducts from "./CustomizeProducts";
-function SingleProductInfo({
-  product,
-  isProductOptions,
-}: {
-  product: products.Product;
-  isProductOptions: boolean | undefined;
-}) {
+
+function SingleProductInfo({ product }: { product: products.Product }) {
   const { selectedVariant, selectedOptions } = useSingleProduct();
   const priceData = selectedVariant.variant?.priceData;
   const isDiscount = priceData?.price !== priceData?.discountedPrice;
@@ -39,10 +32,6 @@ function SingleProductInfo({
             : priceData?.formatted?.price}
         </h2>
       </div>
-      <div className="bg h-[2px] bg-secondary" />
-
-      {isProductOptions && <CustomizeProducts />}
-      <Add productId={product._id!} />
     </>
   );
 }

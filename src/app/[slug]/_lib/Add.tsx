@@ -12,7 +12,7 @@ type AddProps = {
 
 function Add({ productId }: AddProps) {
   const wixClient = useWixClient();
-  const { addItem } = useCartStore();
+  const { addItem, isLoadingCart } = useCartStore();
   const { selectedVariant, selectedOptions } = useSingleProduct();
   const [quantity, setQuantity] = useState(1);
 
@@ -95,6 +95,7 @@ function Add({ productId }: AddProps) {
       </div>
       <button
         onClick={addButtonHandler.bind(null, quantity)}
+        disabled={isLoadingCart}
         className="mt-10 w-36 rounded-3xl px-4 py-2 text-sm text-primary ring-1 ring-primary hover:bg-primary hover:text-primary-foreground disabled:cursor-not-allowed disabled:bg-primary/40 disabled:text-primary-foreground"
       >
         Add to Cart

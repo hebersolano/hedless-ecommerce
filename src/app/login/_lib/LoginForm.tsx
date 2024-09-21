@@ -11,7 +11,6 @@ import OAuthLoginButton from "./OAuthLoginButton";
 import useWixClient from "@/hooks/useWixClient";
 import { LoginFormSchemas } from "@/lib/schemas";
 import { handleSubmitData, handleSubmitResponse } from "./helpers";
-import { useEffect } from "react";
 
 function LoginForm({ formMode }: { formMode: FormMode }) {
   const { mode, formTitle, buttonTitle, username, email, password } = formMode;
