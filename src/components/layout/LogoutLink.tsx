@@ -16,7 +16,8 @@ function LogoutLink() {
       .logout(window.location.href)
       .then((res) => {
         console.log(res);
-        Cookies.set("refreshToken", "");
+        Cookies.set("session", "");
+        localStorage.removeItem("session");
         window.location.href = res.logoutUrl;
       })
       .catch((e) => console.log(e));

@@ -11,9 +11,13 @@ import { createContext, ReactNode } from "react";
 import { setSessionTokens } from "@/lib/helpers/setSessionTokens";
 
 function getSessionTokens(): Tokens | undefined {
-  const sessionTokens = Cookies.get("session");
+  let sessionTokens = Cookies.get("session");
 
-  if (!sessionTokens) return undefined;
+  if (!sessionTokens) {
+    sessionTokens = localStorage.getItem("session") || undefined;
+
+    if (!sessionTokens) return undefined;
+  }
   return JSON.parse(sessionTokens) as Tokens;
 }
 
@@ -32,7 +36,7 @@ function createWixClient() {
     },
     auth: OAuthStrategy({
       clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,
-      // tokens: sessionTokens,
+      tokens: sessionTokens,
     }),
   });
 
